@@ -4,12 +4,14 @@ using com.TeamPlug.Patterns;
 
 namespace com.TeamPlug.Input
 {
-    public class InputController : Singleton<InputController>
+    public class TouchController : Singleton<TouchController>
     {
-        public const int MAX_TOUCH_COUNT = 2;
+        /// <summary>
+        /// 인식 할 터치 개수
+        /// </summary>
+        public static int MAX_TOUCH_COUNT = 1;
 
         private List<ITouchObservable> observableList;
-
         public int observableCount { get { return observableList.Count; } }
 
         private void Awake()
@@ -85,9 +87,13 @@ namespace com.TeamPlug.Input
             }
         }
 
+        /// <summary>
+        /// 터치 이벤트 오브젝트를 등록합니다.
+        /// </summary>
+        /// <param name="_observable"></param>
         public void AddObservable(ITouchObservable _observable)
         {
-            if (observableList.Contains(_observable))
+            if (observableList.Contains(_observable) || observableList == null)
             {
                 return;
             }
@@ -95,9 +101,44 @@ namespace com.TeamPlug.Input
             observableList.Add(_observable);
         }
 
+        /// <summary>
+        /// 등록된 터치 이벤트 오브젝트를 제거합니다.
+        /// </summary>
+        /// <param name="_observable"></param>
         public void RemoveObservable(ITouchObservable _observable)
         {
+            if(observableList == null)
+            {
+                return;
+            }
+
             observableList.Remove(_observable);
         }
+
+        /// <summary>
+        /// 해당 레이어들과 레이캐스팅을 실행합니다.
+        /// </summary>
+        /// <param name="touchPosition">터치 위치</param>
+        /// <param name="layers">레이캐스팅에 포함 할 레이어들</param>
+        /// <returns></returns>
+        public static Collider2D Raycast2D(Vector2 touchPosition, params int[] layers)
+        {
+            int layerMask = 1;
+
+            for (int i = 0; i < layers.Length; i++)
+            {
+                layerMask = layerMask << layers[i];
+            }
+
+            return Physics2D.Raycast(touchPosition, Vector2.zero, 0f, ~layerMask).collider;
+        }
+    }
+
+    public interface ITouchObservable
+    {
+        void TouchBegan(Vector3 touchPosition, int touchIndex);
+        void TouchMoved(Vector3 touchPosition, int touchIndex);
+        void TouchCancel(Vector3 touchPosition, int touchIndex);
+        void TouchEnded(Vector3 touchPosition, int touchIndex);
     }
 }

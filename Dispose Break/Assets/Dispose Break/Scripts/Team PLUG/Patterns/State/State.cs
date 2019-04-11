@@ -11,10 +11,10 @@ namespace com.TeamPlug.Patterns
         public abstract void Execute();
         public abstract void Release();
 
-        // ----------- InputObservable Interface ---------------
-        public virtual void TouchBegan(Vector3 _touchPosition, int _index)    {}
-        public virtual void TouchMoved(Vector3 _touchPosition, int _index)    {}
-        public virtual void TouchCancel(Vector3 _touchPosition, int _index)   {}
-        public virtual void TouchEnded(Vector3 _touchPosition, int _index)    {}
+        // ITouchObservable Interface
+        public virtual void TouchBegan(Vector3 touchPosition, int touchIndex)    {}
+        public virtual void TouchMoved(Vector3 touchPosition, int touchIndex)    {}
+        public virtual void TouchCancel(Vector3 touchPosition, int touchIndex)   {}
+        public virtual void TouchEnded(Vector3 touchPosition, int touchIndex)    {}
     }
 }
