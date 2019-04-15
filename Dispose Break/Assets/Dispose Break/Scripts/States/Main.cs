@@ -5,6 +5,9 @@ using com.TeamPlug.Patterns;
 
 public class Main : State
 {
+    public Transform point;
+    public Transform moved;
+
     public override IEnumerator Initialize(params object[] _data)
     {
         yield return null;
@@ -16,9 +19,20 @@ public class Main : State
 
     public override void Execute()
     {
+        if(Input.GetKeyDown(KeyCode.Return))
+        {
+            var relative = point.InverseTransformPoint(moved.position);
+
+            Debug.Log(relative);
+        }
     }
 
     public override void Release()
     {
+    }
+
+    public void StartGame()
+    {
+        StateController.Instance.ChangeState("InfinityMode", false);
     }
 }
