@@ -6,17 +6,15 @@ using com.TeamPlug.Input;
 
 public class InfinityMode : State
 {
-    public List<Block> blocks;
     public Ball ball;
 
     public Transform path;
+    public Transform selectBlock;
 
     private int disposeCount;
 
     public override IEnumerator Initialize(params object[] _data)
     {
-        blocks = new List<Block>();
-
         TouchController.Instance.AddObservable(this);
 
         yield return null;
@@ -44,17 +42,25 @@ public class InfinityMode : State
 
         if(hitCollider != null)
         {
-            Debug.Log("hit : " + hitCollider.name);
+            if(hitCollider.tag.Equals("Block"))
+            {
+                // 이동 
+                selectBlock = hitCollider.transform;
+            }
         }
+    }
+
+    public override void TouchMoved(Vector3 touchPosition, int touchIndex)
+    {
+
+    }
+
+    public override void TouchEnded(Vector3 touchPosition, int touchIndex)
+    {
     }
 
     public void ShotBall()
     {
-        if(disposeCount < blocks.Count)
-        {
-            return;
-        }
-
         ball.Shot();
     }
 }

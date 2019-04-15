@@ -13,16 +13,14 @@ public class Ball : MonoBehaviour
 
     private bool isShoted;
     private Vector3 shotPosition;
+    private new Rigidbody2D rigidbody2D;
 
     private void Start()
     {
         shotPosition = transform.position;
         speed = GameConst.DefaultSpeed;
         direction = Quaternion.AngleAxis(shotDegree, Vector3.forward) * Vector3.right;
-    }
-
-    private void Update()
-    {
+        rigidbody2D = GetComponent<Rigidbody2D>();
     }
 
     public void Shot()
@@ -33,16 +31,15 @@ public class Ball : MonoBehaviour
         }
 
         isShoted = true;
-        
 
-        GetComponent<Rigidbody2D>().velocity = (direction * speed);
+        rigidbody2D.velocity = (direction * speed);
     }
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
         if (collision.gameObject.tag.Equals(TAG_SHOT_LINE) && isShoted)
         {
-            GetComponent<Rigidbody2D>().velocity = Vector2.zero;
+            rigidbody2D.velocity = Vector2.zero;
 
             // 발사된 후 발사라인에 도달 시
             StartCoroutine(ResetShot());

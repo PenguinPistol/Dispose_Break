@@ -14,8 +14,8 @@ namespace com.TeamPlug.Utility
         private const int DATA_HEADER_INDEX = 1;
         private const int DATA_START_INDEX = 2;
 
-        public const string TYPE_KEY = "type";
-        public const string HEADER_KEY = "header";
+        public const string KEY_TYPE = "type";
+        public const string KEY_HEADER = "header";
 
         /// <summary>
         /// Const CSV 파일 읽기
@@ -133,8 +133,8 @@ namespace com.TeamPlug.Utility
                 }
             }
 
-            data.Add(TYPE_KEY, types);
-            data.Add(HEADER_KEY, headers);
+            data.Add(KEY_TYPE, types);
+            data.Add(KEY_HEADER, headers);
 
             for (int i = 0; i < headers.Length; i++)
             {
@@ -190,8 +190,8 @@ namespace com.TeamPlug.Utility
             where T : new()
         {
             var readData = ReadDataCSV(path);
-            var types = readData[TYPE_KEY];
-            var headers = readData[HEADER_KEY];
+            var types = readData[KEY_TYPE];
+            var headers = readData[KEY_HEADER];
 
             List<T> result = new List<T>();
 
@@ -234,7 +234,7 @@ namespace com.TeamPlug.Utility
 
 
         /// <summary>
-        /// 임의의 데이터
+        /// 임의의 데이터 연결
         /// </summary>
         /// <typeparam name="T1">class</typeparam>
         /// <typeparam name="T2">variable type</typeparam>
