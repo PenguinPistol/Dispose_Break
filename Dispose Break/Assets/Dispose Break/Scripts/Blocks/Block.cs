@@ -5,27 +5,24 @@ public class Block : MonoBehaviour
 {
     public SpriteRenderer spriteRenderer;
     public SpriteRenderer disposeArea;
+    public string blockName;
     public int hp = 1;
+    public bool isMoved;
     public bool isDisposed;
+
+    private Vector3 prevPosition;
+
+    public Sprite Sprite { get { return spriteRenderer.sprite; } }
 
     private void Start()
     {
         spriteRenderer = GetComponent<SpriteRenderer>();
+        isDisposed = true;
 
-        if(disposeArea == null)
+        if (disposeArea == null)
         {
             disposeArea = transform.GetComponentInChildren<SpriteRenderer>();
         }
-    }
-
-    public void Initialize(Sprite sprite, int hp)
-    {
-        gameObject.SetActive(true);
-
-        spriteRenderer.sprite = sprite;
-        this.hp = hp;
-
-        isDisposed = false;
     }
 
     private void OnCollisionEnter2D(Collision2D collision)
@@ -41,18 +38,39 @@ public class Block : MonoBehaviour
         }
     }
 
-    private void OnTriggerEnter2D(Collider2D collider)
+    private void OnTriggerStay2D(Collider2D collider)
     {
-        Debug.Log("col");
         if(collider != null)
         {
-            isDisposed = true;
+            isDisposed = false;
             disposeArea.color = Color.red;
         }
-        else
+    }
+
+    private void OnTriggerExit2D(Collider2D collision)
+    {
+        isDisposed = true;
+        disposeArea.color = Color.green;
+    }
+
+    public void StartMoved()
+    {
+        isMoved = true;
+        prevPosition = transform.position;
+
+        disposeArea.gameObject.SetActive(true);
+    }
+
+    public void CheckPosition()
+    {
+        Debug.Log("disposed : " + isDisposed);
+
+        if(isDisposed == false)
         {
-            isDisposed = false;
-            disposeArea.color = Color.green;
+            transform.position = prevPosition;
         }
+
+        isMoved = false;
+        disposeArea.gameObject.SetActive(false);
     }
 }

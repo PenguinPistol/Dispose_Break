@@ -1,20 +1,23 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using com.TeamPlug.Patterns;
 using com.TeamPlug.Input;
 
-public class InfinityMode : State
+public class InfinityMode : GameState
 {
-    public Ball ball;
-
     public Transform path;
-    public Transform selectBlock;
-
-    private int disposeCount;
 
     public override IEnumerator Initialize(params object[] _data)
     {
+        disposeBlocks = new List<Block>
+        {
+            usedBlocks[0]
+            , usedBlocks[0]
+            , usedBlocks[0]
+            , usedBlocks[0]
+            , usedBlocks[0]
+        };
+
         TouchController.Instance.AddObservable(this);
 
         yield return null;
@@ -22,6 +25,7 @@ public class InfinityMode : State
 
     public override void Begin()
     {
+        inventory.Initialize(disposeBlocks);
     }
 
     public override void Execute()
@@ -45,18 +49,30 @@ public class InfinityMode : State
             if(hitCollider.tag.Equals("Block"))
             {
                 // 이동 
-                selectBlock = hitCollider.transform;
+                selectBlock = hitCollider.GetComponent<Block>();
+                selectBlock.StartMoved();
             }
         }
     }
 
     public override void TouchMoved(Vector3 touchPosition, int touchIndex)
     {
+        if(selectBlock != null)
+        {
+            float z = selectBlock.transform.position.z;
 
+            selectBlock.transform.position = new Vector3(touchPosition.x, touchPosition.y, z);
+        }
     }
 
     public override void TouchEnded(Vector3 touchPosition, int touchIndex)
     {
+        if(selectBlock != null)
+        {
+            selectBlock.CheckPosition();
+        }
+
+        selectBlock = null;
     }
 
     public void ShotBall()
