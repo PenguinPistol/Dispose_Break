@@ -14,6 +14,9 @@ public class Ball : MonoBehaviour
     private bool isShoted;
     private Vector3 shotPosition;
     private new Rigidbody2D rigidbody2D;
+    private bool isFinished;
+
+    public bool Finished { get { return isFinished; } }
 
     private void Start()
     {
@@ -31,6 +34,7 @@ public class Ball : MonoBehaviour
         }
 
         isShoted = true;
+        isFinished = false;
 
         rigidbody2D.velocity = (direction * speed);
     }
@@ -42,11 +46,11 @@ public class Ball : MonoBehaviour
             rigidbody2D.velocity = Vector2.zero;
 
             // 발사된 후 발사라인에 도달 시
-            StartCoroutine(ResetShot());
+            isFinished = true;
         }
     }
 
-    private IEnumerator ResetShot()
+    public IEnumerator ResetShot()
     {
         Vector3 startPosition = transform.position;
         float distance = Vector3.Distance(transform.position, shotPosition);
