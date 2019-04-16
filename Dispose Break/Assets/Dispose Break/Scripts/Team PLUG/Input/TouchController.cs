@@ -116,10 +116,10 @@ namespace com.TeamPlug.Input
         }
 
         /// <summary>
-        /// 해당 레이어들과 레이캐스팅을 실행합니다.
+        /// 포함한 레이어와 레이캐스팅을 실행합니다.
         /// </summary>
-        /// <param name="touchPosition">터치 위치</param>
-        /// <param name="layers">레이캐스팅에 포함 할 레이어들</param>
+        /// <param name="touchPosition">터치 좌표</param>
+        /// <param name="layers">레이캐스팅에 포함할 레이어</param>
         /// <returns></returns>
         public static Collider2D Raycast2D(Vector2 touchPosition, params int[] layers)
         {
