@@ -9,6 +9,7 @@ public class Block : MonoBehaviour
     public int hp = 1;
     public bool isMoved;
     public bool isDisposed;
+    public bool isBreaked;
 
     private Vector3 prevPosition;
 
@@ -18,6 +19,7 @@ public class Block : MonoBehaviour
     {
         spriteRenderer = GetComponent<SpriteRenderer>();
         isDisposed = true;
+        isBreaked = false;
 
         if (disposeArea == null)
         {
@@ -29,12 +31,13 @@ public class Block : MonoBehaviour
     {
         if (collision.gameObject.tag.Equals("Ball"))
         {
-            //hp -= 1;
+            hp -= 1;
 
-            //if (hp <= 0)
-            //{
-            //    gameObject.SetActive(false);
-            //}
+            if (hp <= 0)
+            {
+                isBreaked = true;
+                gameObject.SetActive(false);
+            }
         }
     }
 
@@ -63,8 +66,6 @@ public class Block : MonoBehaviour
 
     public void CheckPosition()
     {
-        Debug.Log("disposed : " + isDisposed);
-
         if(isDisposed == false)
         {
             transform.position = prevPosition;

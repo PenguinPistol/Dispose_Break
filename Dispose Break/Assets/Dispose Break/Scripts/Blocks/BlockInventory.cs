@@ -12,6 +12,8 @@ public class BlockInventory : MonoBehaviour
 
     private GameState gameState;
 
+    public int Count { get { return items.Count; } }
+
     private void Start()
     {
         gameState = ((GameState)StateController.Instance.CurrentState);

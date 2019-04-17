@@ -15,8 +15,10 @@ public abstract class GameState : State
     public BlockInventory inventory;
     // 해당 모드에서 사용되는 블럭들
     public List<Block> usedBlocks;
-    // 현재 배치해아 하는 블럭들
-    protected List<Block> disposeBlocks;
+    // 인벤토리에 블럭들
+    protected List<Block> inventoryBlocks;
+    // 배치된 블럭들
+    protected List<Block> disposedBlocks = new List<Block>();
 
     public override IEnumerator Initialize(params object[] _data)
     {
@@ -39,5 +41,7 @@ public abstract class GameState : State
     {
         selectBlock = Instantiate(block, transform);
         selectBlock.StartMoved();
+
+        disposedBlocks.Add(selectBlock);
     }
 }

@@ -1289,7 +1289,9 @@ MonoBehaviour:
   inventory: {fileID: 7162386085105075339}
   usedBlocks:
   - {fileID: 8499854105812135990, guid: 2a516ccb2d6edba43a77d2b85e55b1d7, type: 3}
+  - {fileID: 8499854105812135990, guid: 2261e236f288b454e9c9bdd25f03c33a, type: 3}
   path: {fileID: 6788260523321465627}
+  shotButton: {fileID: 1377521683761669396}
 --- !u!1 &6164988528068328625
 GameObject:
   m_ObjectHideFlags: 0
