@@ -1,6 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
 
@@ -12,21 +10,21 @@ public class InventoryItem : MonoBehaviour, IPointerDownHandler
     public Text countText;
     public Button button;
 
-    public delegate void PressEvent();
+    public delegate void PointerDownAction();
+    public PointerDownAction pointerDown;
 
-    public PressEvent pressEvent;
-
-    public void Initialize(Block data, int count)
+    public void Initialize(Block block, int count)
     {
-        this.block = data;
+        this.block = block;
         this.count = count;
 
-        image.sprite = data.Sprite;
+        image.sprite = block.Sprite;
+        image.SetNativeSize();
     }
 
     public void OnPointerDown(PointerEventData eventData)
     {
-        pressEvent();
+        pointerDown?.Invoke();
     }
 
     private void Update()

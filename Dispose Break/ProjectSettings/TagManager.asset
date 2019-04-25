@@ -8,6 +8,7 @@ TagManager:
   - Ball
   - Block
   - Shot Line
+  - Wall
   layers:
   - Default
   - TransparentFX
@@ -19,7 +20,7 @@ TagManager:
   - 
   - State
   - Background
-  - 
+  - Wall
   - 
   - 
   - 

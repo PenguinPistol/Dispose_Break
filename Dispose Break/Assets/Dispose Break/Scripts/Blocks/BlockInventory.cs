@@ -1,8 +1,5 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
-using com.TeamPlug.Patterns;
-using UnityEngine.EventSystems;
 
 public class BlockInventory : MonoBehaviour
 {
@@ -10,14 +7,10 @@ public class BlockInventory : MonoBehaviour
     public InventoryItem itemPrefab;
     public Transform contentView;
 
-    private GameState gameState;
-
     public int Count { get { return items.Count; } }
 
     private void Start()
     {
-        gameState = ((GameState)StateController.Instance.CurrentState);
-
         items = new Dictionary<string, InventoryItem>();
     }
 
@@ -35,11 +28,11 @@ public class BlockInventory : MonoBehaviour
             {
                 items[name] = Instantiate(itemPrefab, contentView);
                 items[name].Initialize(blockList[i], 1);
-                items[name].pressEvent = delegate ()
+                items[name].pointerDown = () =>
                 {
                     items[name].count -= 1;
 
-                    gameState.DisposeBlock(items[name].block);
+                    GameManager.Instance.currentGameMode.DisposeBlock(items[name].block);
 
                     if (items[name].count <= 0)
                     {

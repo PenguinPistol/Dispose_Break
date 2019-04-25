@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Reflection;
+using System.IO;
 
 namespace com.TeamPlug.Utility
 {
@@ -68,12 +69,11 @@ namespace com.TeamPlug.Utility
         /// <summary>
         /// Data CSV 파일 읽기
         /// </summary>
-        /// <param name="path">Resoucres/(path)</param>
+        /// <param name="path">Assets/(path)</param>
         public static Dictionary<string, string[]> ReadDataCSV(string path)
         {
             var data = new Dictionary<string, string[]>();
-            var textAsset = Resources.Load<TextAsset>(path);
-            var lines = textAsset.text.Split('\n');
+            var lines = File.ReadAllLines(string.Format("{0}", path));
 
             if (lines.Length < 1)
             {
@@ -184,7 +184,7 @@ namespace com.TeamPlug.Utility
         /// 
         /// </summary>
         /// <typeparam name="T">데이터를 저장할 클래스</typeparam>
-        /// <param name="path">Resoucres/(path)</param>
+        /// <param name="path">Assets/(path)</param>
         /// <returns></returns>
         public static List<T> ReadData<T>(string path)
             where T : new()

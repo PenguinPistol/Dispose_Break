@@ -73,8 +73,8 @@ SpriteRenderer:
   m_SortingLayerID: 9820381
   m_SortingLayer: 1
   m_SortingOrder: 1
-  m_Sprite: {fileID: 21300000, guid: 9bd50d6ed7411854abbf806bc1696371, type: 3}
-  m_Color: {r: 1, g: 0, b: 0, a: 1}
+  m_Sprite: {fileID: 21300000, guid: 73223b1c969f4574995feb00258579df, type: 3}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
@@ -122,14 +122,14 @@ BoxCollider2D:
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0.5, y: 0.5}
-    oldSize: {x: 2, y: 1}
+    oldSize: {x: 2, y: 0.75}
     newSize: {x: 2, y: 1}
     adaptiveTilingThreshold: 0.5
     drawMode: 0
     adaptiveTiling: 0
   m_AutoTiling: 0
   serializedVersion: 2
-  m_Size: {x: 2, y: 1}
+  m_Size: {x: 2, y: 0.75}
   m_EdgeRadius: 0
 --- !u!61 &1358049147996779566
 BoxCollider2D:
@@ -148,14 +148,14 @@ BoxCollider2D:
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0.5, y: 0.5}
-    oldSize: {x: 2, y: 1}
+    oldSize: {x: 2, y: 0.75}
     newSize: {x: 2, y: 1}
     adaptiveTilingThreshold: 0.5
     drawMode: 0
     adaptiveTiling: 0
   m_AutoTiling: 0
   serializedVersion: 2
-  m_Size: {x: 2, y: 1}
+  m_Size: {x: 2, y: 0.75}
   m_EdgeRadius: 0
 --- !u!114 &8499854105812135990
 MonoBehaviour:
@@ -173,8 +173,10 @@ MonoBehaviour:
   disposeArea: {fileID: 3063686822693055222}
   blockName: Normal Block
   hp: 1
+  groupIndex: 0
   isMoved: 0
   isDisposed: 0
+  isBreaked: 0
 --- !u!1 &4687541288009182614
 GameObject:
   m_ObjectHideFlags: 0
@@ -201,7 +203,7 @@ Transform:
   m_GameObject: {fileID: 4687541288009182614}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 2, y: 0.75, z: 1}
   m_Children: []
   m_Father: {fileID: 8997838399460964755}
   m_RootOrder: 0
@@ -243,8 +245,8 @@ SpriteRenderer:
   m_SortingLayerID: 9820381
   m_SortingLayer: 1
   m_SortingOrder: 2
-  m_Sprite: {fileID: 21300000, guid: 33ee45488b48e584d92cc444cc9fcd85, type: 3}
-  m_Color: {r: 0, g: 1, b: 0, a: 1}
+  m_Sprite: {fileID: 21300000, guid: 8b871a10aad455a409d3b7ad1e5ad084, type: 3}
+  m_Color: {r: 0, g: 1, b: 0, a: 0.33333334}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0

@@ -3,26 +3,40 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using com.TeamPlug.Input;
-using com.TeamPlug.Patterns;
 
 public class InfinityMode : GameState
 {
-    public Transform path;
-    public Button shotButton;
+    public enum State
+    {
+        Ready, Play, Pause, Finished
+    }
+    
+    public Animator animator;
+    public Text scoreText;
 
-    private bool isShot;
+    private int ralleyScore = 0;
+    private int currentScore = 0;
+    private State state = State.Ready;
 
     public override IEnumerator Initialize(params object[] _data)
     {
+        GameManager.Instance.currentGameMode = this;
+
         inventoryBlocks = new List<Block>
         {
             usedBlocks[0]
-            , usedBlocks[0]
             , usedBlocks[1]
             , usedBlocks[1]
         };
 
+        ball.wallAction = () =>
+        {
+            ralleyScore++;
+        };
+
         isShot = false;
+
+        selectBlock = null;
 
         yield return null;
     }
@@ -38,9 +52,18 @@ public class InfinityMode : GameState
 
     public override void Execute()
     {
-        if(Input.GetKeyDown(KeyCode.Escape))
+        switch(state)
         {
-            StateController.Instance.ChangeState("Main", false);
+            case State.Ready:
+                if(Input.GetKeyDown(KeyCode.Escape))
+                {
+                    PopupContoller.Instance.Show("QuitPopup");
+                }
+                break;
+
+            case State.Play:
+                scoreText.text = string.Format("{0}", currentScore);
+                break;
         }
     }
 
@@ -62,6 +85,7 @@ public class InfinityMode : GameState
             }
         }
     }
+
 
     public override void TouchMoved(Vector3 touchPosition, int touchIndex)
     {
@@ -88,35 +112,42 @@ public class InfinityMode : GameState
         }
     }
 
-    public void ShotBall()
+    public override void DisposeBlock(Block block)
     {
-        if(isShot)
+        if(state == State.Ready)
         {
-            return;
+            state = State.Play;
+            animator.Play("Play");
         }
 
-        isShot = true;
+        selectBlock = Instantiate(block, transform);
+        selectBlock.StartMoved();
+        selectBlock.breakedAction = () => {
+            ralleyScore++;
+        };
 
-        StartCoroutine(Shot());
+        disposedBlocks.Add(selectBlock);
     }
 
-    private IEnumerator Shot()
+    protected override IEnumerator Shot()
     {
         ball.Shot();
 
-        while(ball.Finished == false)
+        while (ball.Finished == false)
         {
             yield return null;
         }
 
-        if(disposedBlocks.FindAll(x => x.isBreaked).Count == disposedBlocks.Count)
+        if (disposedBlocks.FindAll(x => x.isBreaked).Count == disposedBlocks.Count)
         {
             // 성공
-            Debug.Log("성공!");
-
             yield return ball.ResetShot();
 
+            currentScore += ralleyScore;
+            ralleyScore = 0;
+
             CalculatePath();
+            path.gameObject.SetActive(true);
 
             foreach (var item in disposedBlocks)
             {
@@ -125,22 +156,15 @@ public class InfinityMode : GameState
             disposedBlocks.Clear();
 
             inventory.Initialize(inventoryBlocks);
+
         }
         else
         {
             // 실패
-            Debug.Log("실패...");
+            PopupContoller.Instance.Show("InfinityResultPopup", currentScore);
         }
 
         shotButton.interactable = false;
         isShot = false;
-    }
-
-    private void CalculatePath()
-    {
-        for (int i = 0; i < path.childCount; i++)
-        {
-            path.GetChild(i).localPosition = Vector3.Lerp(ball.direction, ball.direction * ball.speed, i * 0.1f);
-        }
     }
 }
