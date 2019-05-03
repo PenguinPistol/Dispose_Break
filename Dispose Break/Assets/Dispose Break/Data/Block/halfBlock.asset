@@ -13,6 +13,7 @@ MonoBehaviour:
   m_Name: halfBlock
   m_EditorClassIdentifier: 
   blockIndex: 6
+  hp: 1
   blockName: halfBlock
   description: "\uC8FC\uAE30\uC801\uC73C\uB85C \uC808\uBC18\uC73C\uB85C \uBD84\uB9AC\uB418\uC5C8\uB2E4\uAC00
     \uB2E4\uC2DC \uBD99\uB294 \uBCBD\uB3CC\uC785\uB2C8\uB2E4."

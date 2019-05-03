@@ -13,5 +13,6 @@ MonoBehaviour:
   m_Name: bigBlock
   m_EditorClassIdentifier: 
   blockIndex: 3
+  hp: 1
   blockName: bigBlock
   description: "\uD070 \uC0AC\uC774\uC988\uC758 \uC77C\uBC18 \uBCBD\uB3CC\uC785\uB2C8\uB2E4."

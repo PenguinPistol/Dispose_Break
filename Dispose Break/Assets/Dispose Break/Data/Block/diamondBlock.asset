@@ -13,5 +13,6 @@ MonoBehaviour:
   m_Name: diamondBlock
   m_EditorClassIdentifier: 
   blockIndex: 4
+  hp: 1
   blockName: diamondBlock
   description: "\uB9C8\uB984\uBAA8 \uBAA8\uC591\uC758 \uC77C\uBC18 \uBCBD\uB3CC\uC785\uB2C8\uB2E4."

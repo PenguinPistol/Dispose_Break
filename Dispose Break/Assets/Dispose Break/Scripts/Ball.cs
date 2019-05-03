@@ -8,6 +8,7 @@ public class Ball : MonoBehaviour
     public const string TAG_SHOT_LINE = "Shot Line";
     public const string TAG_BLOCK = "Block";
     public const string TAG_WALL = "Wall";
+    public const string TAG_GOODS = "Goods";
 
     public float shotDegree;
     public float speed;
@@ -58,6 +59,10 @@ public class Ball : MonoBehaviour
 
             // 발사된 후 발사라인에 도달 시
             isFinished = true;
+        }
+        else if(collision.gameObject.tag.Equals(TAG_GOODS))
+        {
+            Debug.Log("goods");
         }
     }
 

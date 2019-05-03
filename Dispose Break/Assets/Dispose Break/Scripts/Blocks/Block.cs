@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using TMPro;
 using System.Collections;
 using UnityEngine.Events;
 
@@ -6,9 +7,10 @@ public class Block : MonoBehaviour
 {
     public SpriteRenderer spriteRenderer;
     public SpriteRenderer disposeArea;
+    public TextMeshPro hpText;
     public string blockName;
     public int hp = 1;
-    public int groupIndex;
+    public int index;
 
     public bool isMoved;
     public bool isDisposed;
@@ -28,6 +30,18 @@ public class Block : MonoBehaviour
         if (disposeArea == null)
         {
             disposeArea = transform.GetComponentInChildren<SpriteRenderer>();
+        }
+    }
+
+    private void Update()
+    {
+        if (hp > 1)
+        {
+            hpText.text = string.Format("{0}", hp);
+        }
+        else
+        {
+            hpText.text = "";
         }
     }
 

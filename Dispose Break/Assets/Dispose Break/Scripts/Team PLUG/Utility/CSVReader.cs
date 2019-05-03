@@ -21,13 +21,11 @@ namespace com.TeamPlug.Utility
         /// <summary>
         /// Const CSV 파일 읽기
         /// </summary>
-        /// <param name="path">Resoucres/(path)</param>
+        /// <param name="path">Assets/(path)</param>
         public static List<Dictionary<string, string>> ReadConstCSV(string path)
         {
             var list = new List<Dictionary<string, string>>();
-            TextAsset data = Resources.Load(path) as TextAsset;
-
-            var lines = data.text.Split('\n');
+            var lines = File.ReadAllLines(string.Format("{0}", path));
 
             if (lines.Length <= 1)
             {

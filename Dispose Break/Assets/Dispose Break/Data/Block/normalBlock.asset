@@ -13,5 +13,6 @@ MonoBehaviour:
   m_Name: normalBlock
   m_EditorClassIdentifier: 
   blockIndex: 1
-  blockName: normalBlock
+  hp: 1
+  blockName: NormalBlock
   description: "\uC544\uBB34 \uB2A5\uB825\uC774 \uC5C6\uB294 \uC77C\uBC18 \uBCBD\uB3CC\uC785\uB2C8\uB2E4."

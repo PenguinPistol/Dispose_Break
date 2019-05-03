@@ -2,19 +2,33 @@
 using System.Collections.Generic;
 using UnityEngine;
 using com.TeamPlug.Patterns;
+using System.Data;
 
 public class GameManager : Singleton<GameManager>
 {
     public GameState currentGameMode;
+    public List<BlockData> blocks;
+    public int goods;
 
     private void Awake()
     {
         Application.targetFrameRate = 60;
 
+        blocks = new List<BlockData>();
+
+        Database.Query(Database.SELECT_BLOCK, (IDataReader reader) =>
+        {
+            BlockData block = new BlockData(reader.GetInt32(0))
+            {
+                blockName = reader.GetString(1),
+                description = reader.GetString(2)
+            };
+
+            blocks.Add(block);
+        });
+
         StateController.Instance.Init();
         StateController.Instance.ChangeState(0);
-
-        currentGameMode = (GameState)StateController.Instance.CurrentState;
     }
 
     // 

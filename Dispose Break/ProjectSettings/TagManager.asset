@@ -9,6 +9,7 @@ TagManager:
   - Block
   - Shot Line
   - Wall
+  - Goods
   layers:
   - Default
   - TransparentFX

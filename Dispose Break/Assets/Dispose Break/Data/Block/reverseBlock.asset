@@ -13,6 +13,7 @@ MonoBehaviour:
   m_Name: reverseBlock
   m_EditorClassIdentifier: 
   blockIndex: 8
+  hp: 1
   blockName: reverseBlock
   description: "\uACF5\uC774 \uCDA9\uB3CC\uD558\uBA74 \uCDA9\uB3CC\uD55C \uBC29\uD5A5\uC73C\uB85C
     \uB2E4\uC2DC \uB3CC\uC544\uAC00\uB294 \uBCBD\uB3CC\uC785\uB2C8\uB2E4."

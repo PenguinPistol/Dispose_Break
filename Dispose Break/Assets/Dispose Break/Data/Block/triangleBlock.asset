@@ -13,5 +13,6 @@ MonoBehaviour:
   m_Name: triangleBlock
   m_EditorClassIdentifier: 
   blockIndex: 5
+  hp: 1
   blockName: triangleBlock
   description: "\uC138\uBAA8 \uBAA8\uC591\uC758 \uC77C\uBC18 \uBCBD\uB3CC\uC785\uB2C8\uB2E4."

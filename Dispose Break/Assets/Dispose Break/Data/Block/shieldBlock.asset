@@ -13,6 +13,7 @@ MonoBehaviour:
   m_Name: shieldBlock
   m_EditorClassIdentifier: 
   blockIndex: 7
+  hp: 1
   blockName: shieldBlock
   description: "\uC9C0\uC815\uB41C \uBC29\uD5A5\uC5D0\uC11C \uACF5\uC774 \uCDA9\uB3CC\uD558\uBA74
     \uD53C\uD574\uB97C \uC785\uC9C0 \uC54A\uB294 \uBCBD\uB3CC\uC785\uB2C8\uB2E4."
