@@ -8,6 +8,8 @@ TagManager:
   - Ball
   - Block
   - Shot Line
+  - Wall
+  - Goods
   layers:
   - Default
   - TransparentFX
@@ -19,7 +21,7 @@ TagManager:
   - 
   - State
   - Background
-  - 
+  - Wall
   - 
   - 
   - 

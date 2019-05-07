@@ -1,15 +1,19 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 
 public class Ball : MonoBehaviour
 {
     public const string TAG_SHOT_LINE = "Shot Line";
     public const string TAG_BLOCK = "Block";
+    public const string TAG_WALL = "Wall";
+    public const string TAG_GOODS = "Goods";
 
     public float shotDegree;
     public float speed;
     public Vector3 direction;
+    public UnityAction wallAction;
 
     private bool isShoted;
     private Vector3 shotPosition;
@@ -39,6 +43,14 @@ public class Ball : MonoBehaviour
         rigidbody2D.velocity = (direction * speed);
     }
 
+    private void OnCollisionEnter2D(Collision2D collision)
+    {
+        if(collision.collider.tag.Equals(TAG_WALL))
+        {
+            wallAction?.Invoke();
+        }
+    }
+
     private void OnTriggerEnter2D(Collider2D collision)
     {
         if (collision.gameObject.tag.Equals(TAG_SHOT_LINE) && isShoted)
@@ -47,6 +59,10 @@ public class Ball : MonoBehaviour
 
             // 발사된 후 발사라인에 도달 시
             isFinished = true;
+        }
+        else if(collision.gameObject.tag.Equals(TAG_GOODS))
+        {
+            Debug.Log("goods");
         }
     }
 
@@ -58,7 +74,7 @@ public class Ball : MonoBehaviour
 
         while (Vector3.Distance(shotPosition, transform.position) > 0.1f)
         {
-            float distcoverd = (Time.time - startTime) * GameConst.DefaultSpeed;
+            float distcoverd = (Time.time - startTime) * GameConst.DefaultSpeed * 2;
             float fracJouney = distcoverd / distance;
 
             transform.position = Vector3.Lerp(startPosition, shotPosition, fracJouney);

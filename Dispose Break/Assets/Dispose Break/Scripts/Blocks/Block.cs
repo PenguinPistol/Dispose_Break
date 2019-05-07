@@ -1,15 +1,21 @@
 ﻿using UnityEngine;
+using TMPro;
 using System.Collections;
+using UnityEngine.Events;
 
 public class Block : MonoBehaviour
 {
     public SpriteRenderer spriteRenderer;
     public SpriteRenderer disposeArea;
+    public TextMeshPro hpText;
     public string blockName;
     public int hp = 1;
+    public int index;
+
     public bool isMoved;
     public bool isDisposed;
     public bool isBreaked;
+    public UnityAction breakedAction;
 
     private Vector3 prevPosition;
 
@@ -27,14 +33,28 @@ public class Block : MonoBehaviour
         }
     }
 
+    private void Update()
+    {
+        if (hp > 1)
+        {
+            hpText.text = string.Format("{0}", hp);
+        }
+        else
+        {
+            hpText.text = "";
+        }
+    }
+
     private void OnCollisionEnter2D(Collision2D collision)
     {
         if (collision.gameObject.tag.Equals("Ball"))
         {
-            hp -= 1;
+            hp -= GameConst.BallDamage;
 
             if (hp <= 0)
             {
+                breakedAction?.Invoke();
+
                 isBreaked = true;
                 gameObject.SetActive(false);
             }
@@ -46,14 +66,15 @@ public class Block : MonoBehaviour
         if(collider != null)
         {
             isDisposed = false;
-            disposeArea.color = Color.red;
+            disposeArea.color = new Color(1, 0, 0, 0.3f);
+
         }
     }
 
     private void OnTriggerExit2D(Collider2D collision)
     {
         isDisposed = true;
-        disposeArea.color = Color.green;
+        disposeArea.color = new Color(0, 1, 0, 0.3f);
     }
 
     public void StartMoved()
@@ -74,4 +95,5 @@ public class Block : MonoBehaviour
         isMoved = false;
         disposeArea.gameObject.SetActive(false);
     }
+
 }

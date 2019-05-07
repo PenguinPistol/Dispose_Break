@@ -1,77 +1,80 @@
-﻿using UnityEngine;
+﻿using System.Collections;
 using System.Collections.Generic;
-using System.Collections;
+using UnityEngine;
+using com.TeamPlug.Patterns;
 
-namespace com.TeamPlug.Patterns
+public class StateController : Singleton<StateController>
 {
-    public class StateController : Singleton<StateController>
+    public List<State> stateList;
+    public LoadingView loadingView;
+
+    private State currentState;
+    private Dictionary<string, State> states;
+
+    public State CurrentState { get { return currentState; } }
+    public string CurrentStateName { get { return currentState.name; } }
+
+    public void Init()
     {
-        public List<State> stateList;
-        public LoadingView loadingView;
+        states = new Dictionary<string, State>();
 
-        private State currentState;
-        private Dictionary<string, State> states;
-
-        public State CurrentState { get { return currentState; } }
-        public string CurrentStateName { get { return currentState.name; } }
-
-        public void Init()
+        for (int i = 0; i < stateList.Count; i++)
         {
-            states = new Dictionary<string, State>();
+            states.Add(stateList[i].GetType().Name, stateList[i]);
+        }
+    }
 
-            for (int i = 0; i < stateList.Count; i++)
-            {
-                states.Add(stateList[i].GetType().Name, stateList[i]);
-            }
+    private void Update()
+    {
+        if (currentState != null)
+        {
+            currentState.Execute();
+        }
+    }
+
+    public void ChangeState(int _index, bool _animated = false, params object[] _data)
+    {
+        StartCoroutine(Change(stateList[_index].GetType().ToString(), _animated, _data));
+    }
+
+    public void ChangeState(string _name, bool _animated = false, params object[] _data)
+    {
+        StartCoroutine(Change(_name, _animated, _data));
+    }
+
+    private IEnumerator Change(string _name, bool _animated, params object[] _data)
+    {
+        if (loadingView != null && _animated)
+        {
+            yield return loadingView.StartAnimation();
         }
 
-        private void Update()
+        var beforeState = currentState;
+
+        if (currentState != null)
         {
-            if (currentState != null)
-            {
-                currentState.Execute();
-            }
+            currentState.Release();
+            Destroy(currentState.gameObject);
         }
 
-        public void ChangeState(string _name, bool _animated, params object[] _data)
+        if (states.ContainsKey(_name))
         {
-            StartCoroutine(Change(_name, _animated, _data));
+            currentState = Instantiate(states[_name]);
+        }
+        else
+        {
+            Debug.Log("state key is not contain");
+            currentState = beforeState;
         }
 
-        private IEnumerator Change(string _name, bool _animated, params object[] _data)
+        yield return currentState.Initialize(_data);
+
+        if (loadingView != null && _animated)
         {
-            if (loadingView != null && _animated)
-            {
-                yield return loadingView.StartAnimation();
-            }
-
-            var beforeState = currentState;
-
-            if (currentState != null)
-            {
-                currentState.Release();
-                Destroy(currentState.gameObject);
-            }
-
-            if (states.ContainsKey(_name))
-            {
-                currentState = Instantiate(states[_name]);
-            }
-            else
-            {
-                Debug.Log("state key is not contain");
-                currentState = beforeState;
-            }
-
-            yield return currentState.Initialize(_data);
-
-            if (loadingView != null && _animated)
-            {
-                //loadingView.SetActive(false);
-                yield return loadingView.FinishAnimation();
-            }
-
-            currentState.Begin();
+            //loadingView.SetActive(false);
+            yield return loadingView.FinishAnimation();
         }
+
+        currentState.Begin();
     }
 }

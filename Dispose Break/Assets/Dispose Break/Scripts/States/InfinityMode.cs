@@ -3,26 +3,44 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using com.TeamPlug.Input;
-using com.TeamPlug.Patterns;
 
 public class InfinityMode : GameState
 {
-    public Transform path;
-    public Button shotButton;
+    public enum State
+    {
+        Ready, Play, Pause, Finished
+    }
+    
+    public Animator animator;
+    public Text scoreText;
+    public Goods goods;
 
-    private bool isShot;
+    private int rallyScore = 0;
+    private int currentScore = 0;
+    private State state = State.Ready;
+
+    private int currentGroup = 1;
+    private int rallyCount = 0;
+
+    private List<BlockGroup> blockGroup;
 
     public override IEnumerator Initialize(params object[] _data)
     {
-        inventoryBlocks = new List<Block>
+        GameManager.Instance.currentGameMode = this;
+
+        blockGroup = GetUnlockGroup();
+
+
+        SetInventoryBlock(blockGroup[0]);
+
+        ball.wallAction = () =>
         {
-            usedBlocks[0]
-            , usedBlocks[0]
-            , usedBlocks[1]
-            , usedBlocks[1]
+            rallyScore++;
         };
 
         isShot = false;
+
+        selectBlock = null;
 
         yield return null;
     }
@@ -38,9 +56,18 @@ public class InfinityMode : GameState
 
     public override void Execute()
     {
-        if(Input.GetKeyDown(KeyCode.Escape))
+        switch (state)
         {
-            StateController.Instance.ChangeState("Main", false);
+            case State.Ready:
+                if(Input.GetKeyDown(KeyCode.Escape))
+                {
+                    PopupContoller.Instance.Show("QuitPopup");
+                }
+                break;
+
+            case State.Play:
+                scoreText.text = string.Format("{0}", currentScore);
+                break;
         }
     }
 
@@ -62,6 +89,7 @@ public class InfinityMode : GameState
             }
         }
     }
+
 
     public override void TouchMoved(Vector3 touchPosition, int touchIndex)
     {
@@ -88,35 +116,51 @@ public class InfinityMode : GameState
         }
     }
 
-    public void ShotBall()
+    public override void DisposeBlock(Block block)
     {
-        if(isShot)
+        if(state == State.Ready)
         {
-            return;
+            state = State.Play;
+            animator.Play("Play");
         }
 
-        isShot = true;
+        selectBlock = Instantiate(block, transform);
+        selectBlock.StartMoved();
+        selectBlock.breakedAction = () => {
+            rallyScore++;
+        };
 
-        StartCoroutine(Shot());
+        disposedBlocks.Add(selectBlock);
     }
 
-    private IEnumerator Shot()
+    protected override IEnumerator Shot()
     {
         ball.Shot();
 
-        while(ball.Finished == false)
+        while (ball.Finished == false)
         {
             yield return null;
         }
 
-        if(disposedBlocks.FindAll(x => x.isBreaked).Count == disposedBlocks.Count)
+        if (disposedBlocks.FindAll(x => x.isBreaked).Count == disposedBlocks.Count)
         {
             // 성공
-            Debug.Log("성공!");
-
             yield return ball.ResetShot();
 
+            currentScore += rallyScore;
+            rallyScore = 0;
+            rallyCount++;
+
+            goods.Pass();
+
+            if(rallyCount % GameConst.GoodsSpawnCondition == 0)
+            {
+                goods.Show();
+            }
+
+
             CalculatePath();
+            path.gameObject.SetActive(true);
 
             foreach (var item in disposedBlocks)
             {
@@ -124,23 +168,66 @@ public class InfinityMode : GameState
             }
             disposedBlocks.Clear();
 
+            var unlockGroup = GetUnlockGroup();
+            int groupIndex = Random.Range(1, unlockGroup.Count);
+            
+            SetInventoryBlock(unlockGroup[groupIndex]);
+
             inventory.Initialize(inventoryBlocks);
         }
         else
         {
             // 실패
-            Debug.Log("실패...");
+            PopupContoller.Instance.Show("InfinityResultPopup", currentScore);
         }
 
         shotButton.interactable = false;
         isShot = false;
     }
 
-    private void CalculatePath()
+    public void ShowOptionPopup()
     {
-        for (int i = 0; i < path.childCount; i++)
+        PopupContoller.Instance.Show("OptionPopup");
+    }
+
+    public void SetInventoryBlock(BlockGroup group)
+    {
+        inventoryBlocks = new List<Block>();
+
+        // block index로 찾을 수 있게 변경해야됨
+        for (int i = 0; i < group.Count; i++)
         {
-            path.GetChild(i).localPosition = Vector3.Lerp(ball.direction, ball.direction * ball.speed, i * 0.1f);
+            Block block = usedBlocks.Find(x => x.index == group.blockIndex[i]);
+            block.hp = group.blockHp[i];
+            inventoryBlocks.Add(block);
         }
+    }
+
+    private List<BlockGroup> GetUnlockGroup()
+    {
+        List<BlockGroup> result = new List<BlockGroup>();
+        string query = string.Format(Database.SELECT_UNLOCK_GROUP, "InfinityModeGroup", rallyCount);
+
+        Database.Query(query, (reader) =>
+        {
+            BlockGroup group = new BlockGroup
+            {
+                index = reader.GetInt32(0),
+                unlock = reader.GetInt32(1)
+            };
+
+            string[] blockIndex = reader.GetString(2).Split(',');
+            string[] blockHp = reader.GetString(3).Split(',');
+
+            for (int i = 0; i < blockIndex.Length; i++)
+            {
+                group.blockIndex.Add(int.Parse(blockIndex[i]));
+                group.blockHp.Add(int.Parse(blockHp[i]));
+            }
+
+            result.Add(group);
+        });
+
+        return result;
     }
 }
