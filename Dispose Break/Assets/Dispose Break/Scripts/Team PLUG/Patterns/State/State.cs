@@ -16,5 +16,11 @@ namespace com.TeamPlug.Patterns
         public virtual void TouchMoved(Vector3 touchPosition, int touchIndex)    {}
         public virtual void TouchCancel(Vector3 touchPosition, int touchIndex)   {}
         public virtual void TouchEnded(Vector3 touchPosition, int touchIndex)    {}
+
+
+        public void ChangeState(string name)
+        {
+            StateController.Instance.ChangeState(name);
+        }
     }
 }

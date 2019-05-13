@@ -19,7 +19,6 @@ public class InfinityMode : GameState
     private int currentScore = 0;
     private State state = State.Ready;
 
-    private int currentGroup = 1;
     private int rallyCount = 0;
 
     private List<BlockGroup> blockGroup;
@@ -29,7 +28,6 @@ public class InfinityMode : GameState
         GameManager.Instance.currentGameMode = this;
 
         blockGroup = GetUnlockGroup();
-
 
         SetInventoryBlock(blockGroup[0]);
 
@@ -158,7 +156,6 @@ public class InfinityMode : GameState
                 goods.Show();
             }
 
-
             CalculatePath();
             path.gameObject.SetActive(true);
 
@@ -206,14 +203,16 @@ public class InfinityMode : GameState
     private List<BlockGroup> GetUnlockGroup()
     {
         List<BlockGroup> result = new List<BlockGroup>();
-        string query = string.Format(Database.SELECT_UNLOCK_GROUP, "InfinityModeGroup", rallyCount);
+
+        string where = string.Format("UnlockLevel <= {0};", rallyCount);
+        string query = string.Format(Database.SELECT_TABLE_ALL_WHERE, "InfinityModeGroup", where);
 
         Database.Query(query, (reader) =>
         {
             BlockGroup group = new BlockGroup
             {
-                index = reader.GetInt32(0),
-                unlock = reader.GetInt32(1)
+                index = int.Parse(reader.GetString(0)),
+                unlock = int.Parse(reader.GetString(1))
             };
 
             string[] blockIndex = reader.GetString(2).Split(',');

@@ -49,6 +49,11 @@ public class Block : MonoBehaviour
     {
         if (collision.gameObject.tag.Equals("Ball"))
         {
+            if (isMoved)
+            {
+                return;
+            }
+
             hp -= GameConst.BallDamage;
 
             if (hp <= 0)

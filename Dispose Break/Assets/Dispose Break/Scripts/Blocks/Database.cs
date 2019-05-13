@@ -1,17 +1,18 @@
 ﻿using UnityEngine;
 using UnityEngine.Events;
 using System.Data;
-using System.Collections;
-using System.Collections.Generic;
 using Mono.Data.Sqlite;
 using com.TeamPlug.Utility;
 using System;
 
 public static class Database
 {
-    public const string SELECT_BLOCK = "SELECT * FROM Block";
-    public const string SELECT_INFINITY_GROUP = "SELECT * FROM InfinityModeGroup";
-    public const string SELECT_UNLOCK_GROUP = "SELECT * FROM {0} WHERE Unlock <= {1}";
+    public const string CHECK_TABLE = "SELECT COUNT(*) FROM sqlite_master WHERE Name='{0}'";
+    public const string SELECT_TABLE = "SELECT {0} FROM {1}";
+    public const string SELECT_TABLE_WHERE = "SELECT {0} FROM {1} WHERE {2}";
+    public const string SELECT_TABLE_ALL = "SELECT * FROM {0}";
+    public const string SELECT_TABLE_ALL_WHERE = "SELECT * FROM {0} WHERE {1}";
+    public const string INERT_TABLE = "INSERT INTO {0} VALUES({1});";
 
     public static bool Query(string query, UnityAction<IDataReader> queryAction)
     {
@@ -34,8 +35,13 @@ public static class Database
             }
 
             reader.Close();
+            reader = null;
+
             dbCommand.Dispose();
+            dbCommand = null;
+
             dbConnect.Dispose();
+            dbConnect = null;
 
             return true;
         }

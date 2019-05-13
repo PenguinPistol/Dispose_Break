@@ -8,6 +8,7 @@ public class GameManager : Singleton<GameManager>
 {
     public GameState currentGameMode;
     public List<BlockData> blocks;
+    public BallSkin equipedBallSkin;
     public int goods;
 
     private void Awake()
@@ -16,7 +17,9 @@ public class GameManager : Singleton<GameManager>
 
         blocks = new List<BlockData>();
 
-        Database.Query(Database.SELECT_BLOCK, (IDataReader reader) =>
+        string query = string.Format(Database.SELECT_TABLE_ALL, "Block");
+
+        Database.Query(query, (reader) =>
         {
             BlockData block = new BlockData(reader.GetInt32(0))
             {

@@ -3790,7 +3790,7 @@ GameObject:
   - component: {fileID: 7507275696752920027}
   - component: {fileID: 8346398708634560306}
   m_Layer: 9
-  m_Name: Have_Ball
+  m_Name: Ball Shop
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -3891,7 +3891,18 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 7507275696752920027}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 5364012347169582963}
+        m_MethodName: ChangeState
+        m_Mode: 5
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: Shop
+          m_BoolArgument: 0
+        m_CallState: 2
     m_TypeName: UnityEngine.UI.Button+ButtonClickedEvent, UnityEngine.UI, Version=1.0.0.0,
       Culture=neutral, PublicKeyToken=null
 --- !u!1 &8596614691439617347
@@ -4274,15 +4285,25 @@ PrefabInstance:
       propertyPath: m_TagString
       value: Goods
       objectReference: {fileID: 0}
+    - target: {fileID: 1546399742880907036, guid: a703a83901f550742a4ffb6c73e3260d,
+        type: 3}
+      propertyPath: spawnRange
+      value: 
+      objectReference: {fileID: 658974792184390005}
+    - target: {fileID: 1546399742880907036, guid: a703a83901f550742a4ffb6c73e3260d,
+        type: 3}
+      propertyPath: animator
+      value: 
+      objectReference: {fileID: 8661083187797127600}
     - target: {fileID: 281130983754616438, guid: a703a83901f550742a4ffb6c73e3260d,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: 4.64
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 281130983754616438, guid: a703a83901f550742a4ffb6c73e3260d,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: -2.78
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 281130983754616438, guid: a703a83901f550742a4ffb6c73e3260d,
         type: 3}
@@ -4329,16 +4350,6 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 1546399742880907036, guid: a703a83901f550742a4ffb6c73e3260d,
-        type: 3}
-      propertyPath: spawnRange
-      value: 
-      objectReference: {fileID: 658974792184390005}
-    - target: {fileID: 1546399742880907036, guid: a703a83901f550742a4ffb6c73e3260d,
-        type: 3}
-      propertyPath: animator
-      value: 
-      objectReference: {fileID: 8661083187797127600}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: a703a83901f550742a4ffb6c73e3260d, type: 3}
 --- !u!4 &7047740313932609902 stripped

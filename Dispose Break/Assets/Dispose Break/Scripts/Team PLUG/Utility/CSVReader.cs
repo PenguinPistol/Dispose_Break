@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Reflection;
 using System.IO;
+using System.Text.RegularExpressions;
 
 namespace com.TeamPlug.Utility
 {
@@ -67,7 +68,7 @@ namespace com.TeamPlug.Utility
         /// <summary>
         /// Data CSV 파일 읽기
         /// </summary>
-        /// <param name="path">Assets/(path)</param>
+        /// <param name="path">CSV File Path</param>
         public static Dictionary<string, string[]> ReadDataCSV(string path)
         {
             var data = new Dictionary<string, string[]>();
@@ -101,7 +102,6 @@ namespace com.TeamPlug.Utility
                 datas.Add(headers[i], new List<string>());
             }
 
-
             for (int i = DATA_START_INDEX; i < lines.Length; i++)
             {
                 // 데이터 시작/종료 체크
@@ -113,12 +113,13 @@ namespace com.TeamPlug.Utility
                         break;
                     }
 
-                    dataStart = true;
+                    dataStart = true; 
                     i++;    // 시작 첫줄 넘기기
                     continue;
                 }
 
-                var values = lines[i].Split(SEPARATOR);
+                var values = Regex.Split(lines[i], ",(?=(?:[^\"]*\"[^\"]*\")*[^\"]*$)");
+                //var values = lines[i].Split(SEPARATOR);
 
                 if (values.Length == 0 || values[0] == "")
                 {
@@ -127,6 +128,8 @@ namespace com.TeamPlug.Utility
 
                 for (int j = 0; j < headers.Length; j++)
                 {
+                    Debug.Log(headers[j] + " : " + values[j]);
+                    values[j] = values[j].Trim('"');
                     datas[headers[j]].Add(values[j]);
                 }
             }
