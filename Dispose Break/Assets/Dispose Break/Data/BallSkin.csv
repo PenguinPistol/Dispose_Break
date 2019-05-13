@@ -1,0 +1,15 @@
+int,string,string,int,int
+SkinIndex,Name,Grade,UnlockType,UnlockLevel
+@,,,,
+공 스킨 번호,공 스킨 이름,공 스킨 등급,챌린지 구분 ( 0 : 뽑기 / 1 : 원 웨이 / 2 : 노 가이드),획득 스테이지
+1,기본,Normal,0,0
+2,노말1,Normal,0,0
+3,노말2,Normal,0,0
+4,노말3,Normal,0,0
+5,노말4,Normal,0,0
+6,레어1,Rare,0,0
+7,레어2,Rare,0,0
+8,레어3,Rare,0,0
+9,유니크1,Unique,1,1
+10,유니크2,Unique,2,1
+@,,,,

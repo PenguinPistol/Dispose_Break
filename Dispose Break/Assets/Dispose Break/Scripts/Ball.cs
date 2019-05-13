@@ -19,6 +19,7 @@ public class Ball : MonoBehaviour
     private Vector3 shotPosition;
     private new Rigidbody2D rigidbody2D;
     private bool isFinished;
+    private SpriteRenderer sr;
 
     public bool Finished { get { return isFinished; } }
 
@@ -28,6 +29,14 @@ public class Ball : MonoBehaviour
         speed = GameConst.DefaultSpeed;
         direction = Quaternion.AngleAxis(shotDegree, Vector3.forward) * Vector3.right;
         rigidbody2D = GetComponent<Rigidbody2D>();
+        sr = GetComponent<SpriteRenderer>();
+        
+        if(GameManager.Instance.equipedBallSkin != null)
+        {
+            sr.sprite = GameManager.Instance.equipedBallSkin.sprite;
+        }
+
+        rigidbody2D.isKinematic = true;
     }
 
     public void Shot()
@@ -40,6 +49,7 @@ public class Ball : MonoBehaviour
         isShoted = true;
         isFinished = false;
 
+        rigidbody2D.isKinematic = false;
         rigidbody2D.velocity = (direction * speed);
     }
 
@@ -56,13 +66,10 @@ public class Ball : MonoBehaviour
         if (collision.gameObject.tag.Equals(TAG_SHOT_LINE) && isShoted)
         {
             rigidbody2D.velocity = Vector2.zero;
+            rigidbody2D.isKinematic = true;
 
             // 발사된 후 발사라인에 도달 시
             isFinished = true;
-        }
-        else if(collision.gameObject.tag.Equals(TAG_GOODS))
-        {
-            Debug.Log("goods");
         }
     }
 
