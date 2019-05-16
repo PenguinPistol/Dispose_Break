@@ -1,0 +1,14 @@
+int,string,string
+BlockIndex,BlockName,Description
+@,,
+블록 번호,블록 이름,블록 설명
+1,NormalBlock,아무 능력이 없는 일반 벽돌입니다.
+2,SmallBlock,작은 사이즈의 일반 벽돌입니다.
+3,BigBlock,큰 사이즈의 일반 벽돌입니다.
+4,DiamondBlock,마름모 모양의 일반 벽돌입니다.
+5,TriangleBlock,세모 모양의 일반 벽돌입니다.
+6,HalfBlock,주기적으로 절반으로 분리되었다가 다시 붙는 벽돌입니다.
+7,UpShieldBlock,위쪽 방향에서 공이 충돌하면 피해를 입지 않는 벽돌입니다.
+8,DownShieldBlock,아래쪽 방향에서 공이 충돌하면 피해를 입지 않는 벽돌입니다.
+9,ReverseBlock,공이 충돌하면 충돌한 방향으로 다시 돌아가는 벽돌입니다.
+@,,
