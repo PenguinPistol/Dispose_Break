@@ -13,6 +13,7 @@ public class InfinityMode : GameState
     
     public Animator animator;
     public Text scoreText;
+    public Text goodsText;
     public Goods goods;
     public AudioSource sePlayer;
 
@@ -70,6 +71,7 @@ public class InfinityMode : GameState
 
             case State.Play:
                 scoreText.text = string.Format("{0}", currentScore);
+                goodsText.text = string.Format("{0}", SaveData.goods);
                 break;
         }
     }

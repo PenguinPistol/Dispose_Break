@@ -1,6 +1,6 @@
 ﻿using UnityEngine.UI;
 
-public class InfinityResultPopup : ThreeButtonPopup
+public class InfinityResultPopup : TwoButtonPopup
 {
     public Text bestScore;
 
@@ -15,19 +15,13 @@ public class InfinityResultPopup : ThreeButtonPopup
     }
 
     // regame
-    public override void NegativeAction()
-    {
-        StateController.Instance.ChangeState(0);
-    }
-
-    // home
-    public override void NeutralAction()
+    public override void ConfirmAction()
     {
         StateController.Instance.ChangeState(0);
     }
 
     // continue
-    public override void PositiveAction()
+    public override void CancelAction()
     {
         StateController.Instance.ChangeState(0);
     }
