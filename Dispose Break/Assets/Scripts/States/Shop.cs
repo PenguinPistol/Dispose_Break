@@ -22,13 +22,15 @@ public class Shop : State
         string query = string.Format(Database.SELECT_TABLE_ALL, "BallSkin");
 
         Database.Query(query, (reader) => {
-            BallSkin skin = new BallSkin();
+            BallSkin skin = new BallSkin
+            {
+                index = int.Parse(reader.GetString(0)),
+                name = reader.GetString(1),
+                grade = reader.GetString(2),
+                unlockType = int.Parse(reader.GetString(3)),
+                unlockLevel = int.Parse(reader.GetString(4)),
+            };
 
-            skin.index = int.Parse(reader.GetString(0));
-            skin.name = reader.GetString(1);
-            skin.grade = reader.GetString(2);
-            skin.unlockType = int.Parse(reader.GetString(3));
-            skin.unlockLevel = int.Parse(reader.GetString(4));
             skin.sprite = Resources.Load<Sprite>("Sprites/Ball/Ball_" + skin.index);
 
             ballSkins.Add(skin);

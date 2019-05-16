@@ -8,6 +8,7 @@ public class Block : MonoBehaviour
     public SpriteRenderer spriteRenderer;
     public SpriteRenderer disposeArea;
     public TextMeshPro hpText;
+    public ParticleSystem breakEffect;
     public string blockName;
     public int hp = 1;
     public int index;
@@ -68,6 +69,10 @@ public class Block : MonoBehaviour
 
             if (hp <= 0)
             {
+                if(breakEffect != null)
+                {
+                    breakEffect.Play();
+                }
                 breakedAction?.Invoke();
 
                 isBreaked = true;
