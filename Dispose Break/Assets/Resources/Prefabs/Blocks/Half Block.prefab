@@ -101,6 +101,8 @@ MonoBehaviour:
   spriteRenderer: {fileID: 6896087694458800272}
   disposeArea: {fileID: 3063686822693055222}
   hpText: {fileID: 2246496410321344673}
+  breakEffect: {fileID: 4321372395162273547, guid: 4a01497a970c03043805441b9618ace0,
+    type: 3}
   blockName: Half Block
   hp: 1
   index: 6

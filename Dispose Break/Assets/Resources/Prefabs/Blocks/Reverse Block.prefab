@@ -175,6 +175,8 @@ MonoBehaviour:
   spriteRenderer: {fileID: 4562621739826981801}
   disposeArea: {fileID: 3063686822693055222}
   hpText: {fileID: 5985856394989534193}
+  breakEffect: {fileID: 4321372395162273547, guid: 4a01497a970c03043805441b9618ace0,
+    type: 3}
   blockName: Reverse Block
   hp: 1
   index: 9

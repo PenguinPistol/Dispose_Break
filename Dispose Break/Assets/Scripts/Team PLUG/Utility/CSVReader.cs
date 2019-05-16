@@ -26,7 +26,8 @@ namespace com.TeamPlug.Utility
         public static List<Dictionary<string, string>> ReadConstCSV(string path)
         {
             var list = new List<Dictionary<string, string>>();
-            var lines = File.ReadAllLines(string.Format("{0}", path));
+            var textAsset = Resources.Load<TextAsset>(path);
+            var lines = textAsset.text.Split('\n');
 
             if (lines.Length <= 1)
             {

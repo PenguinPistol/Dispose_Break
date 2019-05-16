@@ -159,6 +159,6 @@ public static class Database
     {
         GameConst gameConst = new GameConst();
 
-        CSVReader.ReadConst(gameConst, "Assets/Dispose Break/Data/GameConst.csv");
+        CSVReader.ReadConst(gameConst, "Data/GameConst");
     }
 }

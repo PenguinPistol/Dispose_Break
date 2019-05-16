@@ -13,6 +13,7 @@ public class GameManager : Singleton<GameManager>
     {
         Application.targetFrameRate = 60;
 
+        Database.ReadGameConst();
         CSVToSqlite parser = new CSVToSqlite();
 
         yield return parser.Parse("Block");

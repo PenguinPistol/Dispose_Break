@@ -7,6 +7,7 @@ public class Goods : MonoBehaviour
     public int life;
     public Animator animator;
     public BoxCollider2D spawnRange;
+    public ParticleSystem effect;
 
     private Rect spawnRect;
 
@@ -41,6 +42,11 @@ public class Goods : MonoBehaviour
 
     public void Pass()
     {
+        if(gameObject.activeSelf == false)
+        {
+            return;
+        }
+
         life -= 1;
 
         switch(life)
@@ -58,6 +64,7 @@ public class Goods : MonoBehaviour
     {
         if(collision.tag.Equals("Ball"))
         {
+            Instantiate(effect, transform.position, Quaternion.identity);
             gameObject.SetActive(false);
             SaveData.goods += 1;
         }

@@ -141,3 +141,5 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   life: 0
   animator: {fileID: 0}
+  spawnRange: {fileID: 0}
+  effect: {fileID: 5971132451648611407, guid: 646a32d71e45302499a3d4ea61ec005e, type: 3}

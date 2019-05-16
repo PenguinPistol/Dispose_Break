@@ -71,13 +71,13 @@ public class Block : MonoBehaviour
             {
                 if(breakEffect != null)
                 {
-                    breakEffect.Play();
+                    Instantiate(breakEffect, transform.position, Quaternion.identity);
                 }
+                SoundManager.Instance.PlaySe("Break");
                 breakedAction?.Invoke();
 
                 isBreaked = true;
                 gameObject.SetActive(false);
-                SoundManager.Instance.PlaySe("Break");
             }
         }
     }
