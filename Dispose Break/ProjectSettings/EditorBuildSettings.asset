@@ -6,6 +6,6 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 1
-    path: Assets/Dispose Break/Scenes/Game.unity
+    path: Assets/Scenes/Game.unity
     guid: 138953662999c53488a0bfca2a0d4ffa
   m_configObjects: {}
