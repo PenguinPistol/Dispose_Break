@@ -7,6 +7,7 @@ public static class SaveData
     public static int oneWayClear = 0;
     public static int noGuideClear = 0;
     public static int goods = 0;
+    public static int equipSkin = 1;
     public static List<int> unlockSkins = new List<int>();
 
     public static string UnlockSkins

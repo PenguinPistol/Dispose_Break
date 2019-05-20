@@ -76,6 +76,7 @@ public static class Database
             query.Append("\'OneWayClear\' TEXT, ");
             query.Append("\'NoGuideClear\' TEXT, ");
             query.Append("\'Goods\' TEXT, ");
+            query.Append("\'EquipSkin\' TEXT, ");
             query.Append("\'UnlockSkins\' TEXT, ");
             query.Append("\'BgmMute\' TEXT, ");
             query.Append("\'SeMute\' TEXT);");
@@ -98,6 +99,7 @@ public static class Database
         query.AppendFormat("\'{0}\',", SaveData.oneWayClear);
         query.AppendFormat("\'{0}\',", SaveData.noGuideClear);
         query.AppendFormat("\'{0}\',", SaveData.goods); 
+        query.AppendFormat("\'{0}\',", SaveData.equipSkin);
         query.AppendFormat("\'{0}\',", SaveData.UnlockSkins);
         query.AppendFormat("\'{0}\',", SoundManager.Instance.muteBgm);
         query.AppendFormat("\'{0}\');", SoundManager.Instance.muteSe);
@@ -134,7 +136,8 @@ public static class Database
             SaveData.oneWayClear = int.Parse(reader.GetString(1));
             SaveData.noGuideClear = int.Parse(reader.GetString(2));
             SaveData.goods = int.Parse(reader.GetString(3));
-            string skins = reader.GetString(4).Trim();
+            SaveData.equipSkin = int.Parse(reader.GetString(4));
+            string skins = reader.GetString(5).Trim();
 
             if(string.IsNullOrEmpty(skins))
             {
@@ -150,8 +153,28 @@ public static class Database
                 }
             }
 
-            SoundManager.Instance.muteBgm = bool.Parse(reader.GetString(5));
-            SoundManager.Instance.muteSe = bool.Parse(reader.GetString(6));
+            SoundManager.Instance.muteBgm = bool.Parse(reader.GetString(6));
+            SoundManager.Instance.muteSe = bool.Parse(reader.GetString(7));
+        });
+
+        query.Clear();
+        string where = string.Format("SkinIndex = {0};", SaveData.equipSkin);
+        query.AppendFormat(SELECT_TABLE_ALL_WHERE, "BallSkin", where);
+
+        Query(query.ToString(), (reader) =>
+        {
+            BallSkin skin = new BallSkin
+            {
+                index = int.Parse(reader.GetString(0)),
+                name = reader.GetString(1),
+                grade = reader.GetString(2),
+                unlockType = int.Parse(reader.GetString(3)),
+                unlockLevel = int.Parse(reader.GetString(4)),
+            };
+
+            skin.sprite = Resources.Load<Sprite>("Sprites/Ball/Ball_" + skin.index);
+
+            GameManager.Instance.equipedBallSkin = skin;
         });
     }
 

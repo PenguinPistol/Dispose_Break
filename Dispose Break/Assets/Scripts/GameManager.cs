@@ -30,6 +30,14 @@ public class GameManager : Singleton<GameManager>
         SoundManager.Instance.PlayBgm(0);
     }
 
+    private void Update()
+    {
+        if(Input.GetKeyDown(KeyCode.Return))
+        {
+            SaveData.goods += 10;
+        }
+    }
+
     // 
     private void OnApplicationPause(bool pause)
     {

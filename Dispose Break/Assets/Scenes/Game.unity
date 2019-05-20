@@ -656,14 +656,6 @@ PrefabInstance:
       propertyPath: m_Name
       value: Block_Make_Effect
       objectReference: {fileID: 0}
-    - target: {fileID: 4926975966700038, guid: 368bc30d62b49494da5b73a097e04e1b, type: 3}
-      propertyPath: m_LocalPosition.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4926975966700038, guid: 368bc30d62b49494da5b73a097e04e1b, type: 3}
-      propertyPath: m_LocalPosition.y
-      value: 0
-      objectReference: {fileID: 0}
     - target: {fileID: 4949570205356532, guid: 368bc30d62b49494da5b73a097e04e1b, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
@@ -706,6 +698,14 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4949570205356532, guid: 368bc30d62b49494da5b73a097e04e1b, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4926975966700038, guid: 368bc30d62b49494da5b73a097e04e1b, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4926975966700038, guid: 368bc30d62b49494da5b73a097e04e1b, type: 3}
+      propertyPath: m_LocalPosition.y
       value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents:
@@ -764,7 +764,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &1239834054
 Transform:
   m_ObjectHideFlags: 0
@@ -848,7 +848,7 @@ Camera:
   m_TargetTexture: {fileID: 0}
   m_TargetDisplay: 0
   m_TargetEye: 3
-  m_HDR: 0
+  m_HDR: 1
   m_AllowMSAA: 0
   m_AllowDynamicResolution: 0
   m_ForceIntoRT: 0

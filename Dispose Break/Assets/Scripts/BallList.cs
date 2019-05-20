@@ -5,15 +5,15 @@ using System.Collections.Generic;
 
 public class BallList : ListView<ShopItem, BallSkin>
 {
-    public int selectIndex;
+    public int selectIndex = 0;
 
-    public IEnumerator Init(List<BallSkin> _items, int selectIndex)
+    public IEnumerator Init(List<BallSkin> _items, int _selectIndex)
     {
         yield return base.Init(_items);
 
-        this.selectIndex = selectIndex;
+        selectIndex = _selectIndex - 1;
         items[selectIndex].isSelected = true;
-        GameManager.Instance.equipedBallSkin = items[selectIndex].Data;
+        
     }
 
     public override void SelectItem(int index)
@@ -24,6 +24,7 @@ public class BallList : ListView<ShopItem, BallSkin>
 
             items[index].isSelected = true;
             selectIndex = index;
+            SaveData.equipSkin = index + 1;
             GameManager.Instance.equipedBallSkin = items[index].Data;
         }
     }

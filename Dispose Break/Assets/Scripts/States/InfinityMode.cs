@@ -28,15 +28,14 @@ public class InfinityMode : GameState
     public override IEnumerator Initialize(params object[] _data)
     {
         SoundManager.Instance.sePlayer = sePlayer;
-
         SoundManager.Instance.PlaySe("Scroll");
-
         GameManager.Instance.currentGameMode = this;
 
         blockGroup = GetUnlockGroup();
 
         SetInventoryBlock(blockGroup[0]);
 
+        ball.shotDegree = GameConst.BallAngleDefault;
         ball.wallAction = () =>
         {
             rallyScore++;
@@ -53,7 +52,7 @@ public class InfinityMode : GameState
     {
         inventory.Initialize(inventoryBlocks);
         shotButton.interactable = false;
-        CalculatePath();
+        path.Calculate(ball.shotDegree);
 
         TouchController.Instance.AddObservable(this);
     }
@@ -163,7 +162,7 @@ public class InfinityMode : GameState
                 goods.Show();
             }
 
-            CalculatePath();
+            path.Calculate(ball.shotDegree);
             path.gameObject.SetActive(true);
 
             foreach (var item in disposedBlocks)
@@ -218,7 +217,7 @@ public class InfinityMode : GameState
     {
         List<BlockGroup> result = new List<BlockGroup>();
 
-        string where = string.Format("UnlockLevel <= {0};", rallyCount);
+        string where = string.Format("cast(UnlockLevel as integer) <= {0};", rallyCount);
         string query = string.Format(Database.SELECT_TABLE_ALL_WHERE, "InfinityModeGroup", where);
 
         Database.Query(query, (reader) =>

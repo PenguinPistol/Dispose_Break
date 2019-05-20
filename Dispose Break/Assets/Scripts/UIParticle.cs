@@ -69,12 +69,14 @@ public class UIParticle : MonoBehaviour
 
     public void Play()
     {
-        StartCoroutine(particleRoutine);
+        if(particleRoutine != null)
+            StartCoroutine(particleRoutine);
     }
 
     public void Stop()
     {
-        StopCoroutine(particleRoutine);
+        if (particleRoutine != null)
+            StopCoroutine(particleRoutine);
     }
 
     private IEnumerator CreateParticle()
