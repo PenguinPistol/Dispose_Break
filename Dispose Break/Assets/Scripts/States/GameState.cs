@@ -18,10 +18,10 @@ public abstract class GameState : State
     public BlockInventory inventory;
     // 해당 모드에서 사용되는 블럭들
     public List<Block> usedBlocks;
-    // 공 이동 경로
-    public Transform path;
     // 발사 버튼
     public Button shotButton;
+    // 발사 경로
+    public GuidePath path;
 
     [HideInInspector]
     // 선택한 블록
@@ -73,47 +73,5 @@ public abstract class GameState : State
 
         path.gameObject.SetActive(false);
         StartCoroutine(Shot());
-    }
-
-    // 경로 계산
-    public void CalculatePath()
-    {
-        var ray = new Ray2D(path.position, ball.direction);
-        var hit = Physics2D.CircleCast(ray.origin, 0.25f, ray.direction, PATH_DISTANCE, (1 << 10));
-
-        if (hit)
-        {
-            Vector3 reflect = Vector3.Reflect(ray.direction, hit.normal);
-
-            float travelDistance = Vector3.Distance(ray.origin, hit.point);
-            float remainingDistance = PATH_DISTANCE - travelDistance;
-
-            int travelCount = (int)(travelDistance / PATH_DISTANCE * path.childCount);
-            int remainCount = path.childCount - travelCount;
-
-            for (int i = 0; i < path.childCount; i++)
-            {
-                float t = (float)(i + 1) / travelCount;
-
-                if (i < travelCount)
-                {
-                    path.GetChild(i).localPosition = Vector3.Lerp(Vector3.zero, ball.direction * travelDistance, t);
-                }
-                else
-                {
-                    t = (float)(i - travelCount + 1) / remainCount;
-
-                    path.GetChild(i).position = Vector3.Lerp(hit.point, (Vector3)hit.point + reflect * remainingDistance, t);
-                }
-            }
-        }
-        else
-        {
-            for (int i = 0; i < path.childCount; i++)
-            {
-                float t = (float)i / path.childCount;
-                path.GetChild(i).localPosition = Vector3.Lerp(ball.direction, ball.direction * ball.speed, t);
-            }
-        }
     }
 }

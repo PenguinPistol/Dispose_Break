@@ -13,7 +13,7 @@ public class GetBallPopup : Popup
 
         Debug.Log("popup index : " + index);
 
-        Sprite sprite = Resources.Load<Sprite>("Ball/Ball_" + index);
+        Sprite sprite = Resources.Load<Sprite>("Sprites/Ball/Ball_" + index);
 
         Debug.Log(sprite);
 

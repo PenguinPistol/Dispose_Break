@@ -1,7 +1,7 @@
 #이름,타입,값,설명
 DefaultSpeed,float,17,공 이동속도
 BallDamage,int,1,공의 피해량
-BallAngleDefault,int,45,"최초 랠리 셋팅 시, 공의 각도 값"
+BallAngleDefault,int,30,"최초 랠리 셋팅 시, 공의 각도 값"
 BallAngleMin,int,20,"반복 랠리 셋팅 시, 최소 각도 값"
 BallAngleMax,int,160,"반복 랠리 셋팅 시, 최대 각도 값"
 GoodsSpawnMax,int,1,최대 재화 생성량

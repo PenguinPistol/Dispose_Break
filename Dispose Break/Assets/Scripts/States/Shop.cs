@@ -36,14 +36,7 @@ public class Shop : State
             ballSkins.Add(skin);
         });
 
-        int selectIndex = 0;
-
-        if (GameManager.Instance.equipedBallSkin != null)
-        {
-            selectIndex = GameManager.Instance.equipedBallSkin.index-1;
-        }
-
-        yield return ballList.Init(ballSkins, selectIndex);
+        yield return ballList.Init(ballSkins, SaveData.equipSkin);
 
         foreach(var index in SaveData.unlockSkins)
         {
