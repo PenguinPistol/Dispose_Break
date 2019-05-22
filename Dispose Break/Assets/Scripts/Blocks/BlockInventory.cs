@@ -18,7 +18,9 @@ public class BlockInventory : MonoBehaviour
     {
         for (int i = 0; i < blockList.Count; i++)
         {
-            string name = blockList[i].blockName;
+            string name = blockList[i].blockName + blockList[i].hp;
+
+            Debug.Log(name);
 
             if (items.ContainsKey(name))
             {

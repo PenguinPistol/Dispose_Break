@@ -2,6 +2,7 @@
 using TMPro;
 using System.Collections;
 using UnityEngine.Events;
+using System;
 
 public class Block : MonoBehaviour
 {
@@ -9,9 +10,9 @@ public class Block : MonoBehaviour
     public SpriteRenderer disposeArea;
     public TextMeshPro hpText;
     public ParticleSystem breakEffect;
+    public int index;
     public string blockName;
     public int hp = 1;
-    public int index;
 
     public bool isMoved;
     public bool isDisposed;
@@ -116,5 +117,4 @@ public class Block : MonoBehaviour
         isMoved = false;
         disposeArea.gameObject.SetActive(false);
     }
-
 }

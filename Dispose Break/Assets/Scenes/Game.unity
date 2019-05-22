@@ -1264,6 +1264,8 @@ MonoBehaviour:
   stateList:
   - {fileID: 5364012347169582963, guid: 5dd982a8764ab5e4382984701798f598, type: 3}
   - {fileID: 8075039048290030877, guid: e9ac255cce34c444eb2953326da0f95a, type: 3}
+  - {fileID: 8621861748953905603, guid: dbdfd8ee81076984294004a5bb430345, type: 3}
+  - {fileID: 3932809182145349948, guid: 23f95c4dfb534bb418482a0c03f6c7b8, type: 3}
   loadingView: {fileID: 0}
 --- !u!1001 &1589175804
 PrefabInstance:
@@ -1481,6 +1483,8 @@ MonoBehaviour:
   - {fileID: 6357305455633432992, guid: bec390fee68ea4648a4a57302c595d53, type: 3}
   - {fileID: 1483022592883526772, guid: d4dc3d955308c84429457dfc6aa2287b, type: 3}
   - {fileID: 2551600710178645474, guid: 8cd3eb5126021f7409d950953c79e9f0, type: 3}
+  - {fileID: 5432671749882945813, guid: 07227613e7d80cd449570995ece786b7, type: 3}
+  - {fileID: 5877302899837696901, guid: 1daa9c2cd073aad48a4ff4771063d156, type: 3}
 --- !u!1 &1059724869822600
 GameObject:
   m_ObjectHideFlags: 0

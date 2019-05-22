@@ -20,7 +20,7 @@ public class GameManager : Singleton<GameManager>
         yield return parser.Parse("BallSkin");
         yield return parser.Parse("InfinityModeGroup");
         yield return parser.Parse("NoGuideChallenge");
-        yield return parser.Parse("OnWayChallenge");
+        yield return parser.Parse("OneWayChallenge");
 
         StateController.Instance.Init();
         StateController.Instance.ChangeState(0);
@@ -35,6 +35,11 @@ public class GameManager : Singleton<GameManager>
         if(Input.GetKeyDown(KeyCode.Return))
         {
             SaveData.goods += 10;
+        }
+
+        if(Input.GetKey(KeyCode.LeftControl) && Input.GetKeyDown(KeyCode.F11))
+        {
+            SaveData.oneWayClear = 0;
         }
     }
 

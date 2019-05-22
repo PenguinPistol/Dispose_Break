@@ -77,6 +77,7 @@ public class InfinityMode : GameState
 
     public override void Release()
     {
+        TouchController.Instance.RemoveObservable(this);
     }
 
     public override void TouchBegan(Vector3 touchPosition, int touchIndex)

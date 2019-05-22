@@ -77,7 +77,7 @@ public class SoundManager : Singleton<SoundManager>
 
     public void PlaySe(string name)
     {
-        if (se == null || se.ContainsKey(name) == false || muteSe)
+        if (se == null || sePlayer == null || se.ContainsKey(name) == false || muteSe)
         {
             return;
         }

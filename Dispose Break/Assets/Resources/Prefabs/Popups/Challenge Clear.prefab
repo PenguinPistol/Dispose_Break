@@ -5196,6 +5196,7 @@ GameObject:
   - component: {fileID: 7561630949200793953}
   - component: {fileID: 7561630949200793955}
   - component: {fileID: 7561630949200793954}
+  - component: {fileID: 5432671749882945813}
   m_Layer: 9
   m_Name: Challenge Clear
   m_TagString: Untagged
@@ -5260,3 +5261,21 @@ MonoBehaviour:
   m_FillClockwise: 1
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
+--- !u!114 &5432671749882945813
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7561630949200793952}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a14f113827c28fd4bbcda9fdee3eac95, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  message: {fileID: 0}
+  animator: {fileID: 7561630947306185378}
+  openAnimation: Open
+  closeAnimation: Close
+  confirm: {fileID: 7561630948140398425}
+  cancel: {fileID: 7561630948019730305}
