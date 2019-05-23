@@ -7,6 +7,7 @@ using System.Data;
 public class GameManager : Singleton<GameManager>
 {
     public GameState currentGameMode;
+    public List<BallSkin> ballSkins = new List<BallSkin>();
     public BallSkin equipedBallSkin;
 
     private IEnumerator Start()
@@ -26,6 +27,7 @@ public class GameManager : Singleton<GameManager>
         StateController.Instance.ChangeState(0);
 
         Database.Load();
+        ballSkins = Database.LoadBallSkins();
 
         SoundManager.Instance.PlayBgm(0);
     }

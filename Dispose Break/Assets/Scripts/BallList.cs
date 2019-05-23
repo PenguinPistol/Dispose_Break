@@ -13,7 +13,6 @@ public class BallList : ListView<ShopItem, BallSkin>
 
         selectIndex = _selectIndex - 1;
         items[selectIndex].isSelected = true;
-        
     }
 
     public override void SelectItem(int index)

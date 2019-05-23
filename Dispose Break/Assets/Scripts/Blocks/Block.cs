@@ -18,9 +18,8 @@ public class Block : MonoBehaviour
     public bool isDisposed;
     public bool isBreaked;
     public bool isReversed;
-    public UnityAction breakedAction;
-
     public bool isGaurd;
+    public UnityAction breakedAction;
 
     private Vector3 prevPosition;
 

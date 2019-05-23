@@ -1,24 +1,35 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 using com.TeamPlug.Input;
 
 public class OneWayChallenge : GameState
 {
-    private List<BlockGroup> blockGroup;
+    public Text goodsText;
+    public AudioSource sePlayer;
+
+    private BlockGroup blockGroup;
+    private List<int> hps;
+    private List<BallSkin> unlockSkins;
+    private int level;
 
     public override IEnumerator Initialize(params object[] _data)
     {
+        SoundManager.Instance.sePlayer = sePlayer;
+        SoundManager.Instance.PlaySe("Scroll");
+
         GameManager.Instance.currentGameMode = this;
         GetLevelData();
         // 획득할수 있는 볼 스킨 종류 체크
+        unlockSkins = GameManager.Instance.ballSkins.FindAll(x => x.unlockType == 1);
 
         yield return null;
     }
 
     public override void Begin()
     {
-        inventory.Initialize(inventoryBlocks);
+        inventory.Initialize(inventoryBlocks, hps);
         shotButton.interactable = false;
         path.Calculate(ball.shotDegree);
 
@@ -27,6 +38,12 @@ public class OneWayChallenge : GameState
 
     public override void Execute()
     {
+        if(Input.GetKeyDown(KeyCode.Escape))
+        {
+            ShowOptionPopup();
+        }
+
+        goodsText.text = string.Format("{0}", SaveData.goods);
     }
 
     public override void Release()
@@ -62,9 +79,8 @@ public class OneWayChallenge : GameState
     {
         selectBlock = Instantiate(block, transform);
         selectBlock.StartMoved();
-        selectBlock.breakedAction = () =>
-        {
-
+        selectBlock.breakedAction = () => {
+            // 블록 부서짐
         };
 
         disposedBlocks.Add(selectBlock);
@@ -85,13 +101,14 @@ public class OneWayChallenge : GameState
             // 클리어보상 있는지 체크
             SaveData.oneWayClear += 1;
 
-            PopupContoller.Instance.Show("ChallengeClearPopup", StateController.Instance.CurrentStateName);
+            var unlockSkin = unlockSkins.Find(x => x.unlockLevel == level);
+
+            PopupContoller.Instance.Show("ChallengeClearPopup", "OneWayChallenge", unlockSkin);
         }
         else
         {
             // failed
-
-            PopupContoller.Instance.Show("ChallengeFailedPopup");
+            PopupContoller.Instance.Show("ChallengeFailedPopup", "OneWayChallenge");
         }
     }
 
@@ -100,11 +117,15 @@ public class OneWayChallenge : GameState
         string where = string.Format("Stage = {0};", SaveData.oneWayClear+1);
         string query = string.Format(Database.SELECT_TABLE_ALL_WHERE, "OneWayChallenge", where);
 
-        inventoryBlocks = new List<Block>();
-
         Database.Query(query, (reader) =>
         {
-            string level = reader.GetString(0);
+            level = int.Parse(reader.GetString(0));
+
+            blockGroup = new BlockGroup
+            {
+                index = 0,
+                unlock = 0
+            };
 
             ball.shotDegree = float.Parse(reader.GetString(1));
 
@@ -113,11 +134,24 @@ public class OneWayChallenge : GameState
 
             for (int i = 0; i < index.Length; i++)
             {
-                Block block = usedBlocks.Find(x => x.index == int.Parse(index[i]));
-                block.hp = int.Parse(hp[i]);
-
-                inventoryBlocks.Add(block);
+                blockGroup.blockIndex.Add(int.Parse(index[i]));
+                blockGroup.blockHp.Add(int.Parse(hp[i]));
             }
         });
+
+        inventoryBlocks = new List<Block>();
+        hps = new List<int>();
+
+        for (int i = 0; i < blockGroup.Count; i++)
+        {
+            Block block = usedBlocks.Find(x => x.index == blockGroup.blockIndex[i]);
+            inventoryBlocks.Add(block);
+            hps.Add(blockGroup.blockHp[i]);
+        }
+    }
+
+    public void ShowOptionPopup()
+    {
+        PopupContoller.Instance.Show("ChallengeOptionPopup");
     }
 }

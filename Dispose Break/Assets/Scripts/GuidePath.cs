@@ -14,9 +14,9 @@ public class GuidePath : MonoBehaviour
     {
         Vector3 dir = new Vector3(Mathf.Cos(Mathf.Deg2Rad * targetAngle), Mathf.Sin(Mathf.Deg2Rad * targetAngle));
         Ray2D ray = new Ray2D(transform.position, dir);
-        RaycastHit2D hit = Physics2D.CircleCast(ray.origin, 0.325f, ray.direction, length, 1 << 10);
+        RaycastHit2D hit = Physics2D.CircleCast(ray.origin, 0.47f, ray.direction, length, 1 << 10);
 
-        var angle = Vector3.Angle(Vector3.right, dir);
+        float angle = Vector3.Angle(Vector3.right, dir);
         path.transform.rotation = Quaternion.AngleAxis(angle, Vector3.forward);
 
         if(hit)

@@ -18,7 +18,11 @@ public class Goods : MonoBehaviour
         Vector2 size = spawnRange.size / 2f;
         float offsetY = spawnRange.transform.localPosition.y;
 
+        Debug.LogFormat("size : {0}", spawnRange.size);
+
         spawnRect = new Rect(-size.x, -size.y+offsetY, size.x, size.y-offsetY);
+
+        gameObject.SetActive(false);
     }
 
     public void Show()
@@ -32,10 +36,14 @@ public class Goods : MonoBehaviour
         float x = Random.Range(spawnRect.x, spawnRect.width);
         float y = Random.Range(spawnRect.y, spawnRect.height);
 
+        Debug.LogFormat("spanwnX ({0} - {1})", spawnRect.x, spawnRect.width);
+        Debug.LogFormat("spanwnY ({0} - {1})", spawnRect.y, spawnRect.height);
+
         transform.localPosition = new Vector3(x, y);
         gameObject.SetActive(true);
         life = GameConst.GoodsLife;
 
+        animator.Play("Idle");
         SoundManager.Instance.PlaySe("Goods");
     }
 

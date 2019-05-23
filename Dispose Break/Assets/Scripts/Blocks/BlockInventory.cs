@@ -14,37 +14,33 @@ public class BlockInventory : MonoBehaviour
         items = new Dictionary<string, InventoryItem>();
     }
 
-    public void Initialize(List<Block> blockList)
+    public void Initialize(List<Block> blockList, List<int> hp)
     {
         for (int i = 0; i < blockList.Count; i++)
         {
-            string name = blockList[i].blockName + blockList[i].hp;
+            string key = blockList[i].blockName + hp[i];
 
-            Debug.Log(name);
-
-            if (items.ContainsKey(name))
+            if (items.ContainsKey(key))
             {
-                items[name].count += 1;
+                items[key].count += 1;
             }
             else
             {
-                items[name] = Instantiate(itemPrefab, contentView);
-                items[name].Initialize(blockList[i], 1);
-                items[name].pointerDown = () =>
+                items[key] = Instantiate(itemPrefab, contentView);
+                items[key].Initialize(blockList[i], 1, hp[i]);
+                items[key].pointerDown = () =>
                 {
-                    items[name].count -= 1;
+                    items[key].count -= 1;
 
-                    GameManager.Instance.currentGameMode.DisposeBlock(items[name].block);
+                    GameManager.Instance.currentGameMode.DisposeBlock(items[key].block);
 
-                    if (items[name].count <= 0)
+                    if (items[key].count <= 0)
                     {
-                        Destroy(items[name].gameObject);
-                        items.Remove(name);
+                        Destroy(items[key].gameObject);
+                        items.Remove(key);
                     }
                 };
             }
         }
     }
-
-
 }

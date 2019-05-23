@@ -4657,7 +4657,7 @@ ParticleSystemRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 3e34c848198659e4b8f41cc3dad50030, type: 2}
+  - {fileID: 0}
   - {fileID: 0}
   m_StaticBatchInfo:
     firstSubMesh: 0
@@ -13962,9 +13962,8 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4647272003422766}
-  - component: {fileID: 114371874976319062}
   m_Layer: 5
-  m_Name: Victory_Effect
+  m_Name: Star_Effect
   m_TagString: Effects
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -13985,28 +13984,6 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &114371874976319062
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1766146010696402}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 01eabf86c4473504f9f444ee4dcb6370, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  starFX:
-  - {fileID: 1373913952337552}
-  - {fileID: 0}
-  - {fileID: 0}
-  ea: 3
-  currentEa: 0
-  delay: 0.3
-  currentDelay: 0
-  isEnd: 0
-  idStar: 0
 --- !u!1 &1869499760248456
 GameObject:
   m_ObjectHideFlags: 0

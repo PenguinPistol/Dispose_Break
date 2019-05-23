@@ -71,7 +71,10 @@ public abstract class GameState : State
 
         isShot = true;
 
-        path.gameObject.SetActive(false);
+        if(path != null)
+        {
+            path.gameObject.SetActive(false);
+        }
         StartCoroutine(Shot());
     }
 }

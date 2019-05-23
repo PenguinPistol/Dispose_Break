@@ -17,24 +17,7 @@ public class Shop : State
         SoundManager.Instance.sePlayer = sePlayer;
         SoundManager.Instance.PlaySe("Scroll");
 
-        ballSkins = new List<BallSkin>();
-
-        string query = string.Format(Database.SELECT_TABLE_ALL, "BallSkin");
-
-        Database.Query(query, (reader) => {
-            BallSkin skin = new BallSkin
-            {
-                index = int.Parse(reader.GetString(0)),
-                name = reader.GetString(1),
-                grade = reader.GetString(2),
-                unlockType = int.Parse(reader.GetString(3)),
-                unlockLevel = int.Parse(reader.GetString(4)),
-            };
-
-            skin.sprite = Resources.Load<Sprite>("Sprites/Ball/Ball_" + skin.index);
-
-            ballSkins.Add(skin);
-        });
+        ballSkins = GameManager.Instance.ballSkins;
 
         yield return ballList.Init(ballSkins, SaveData.equipSkin);
 

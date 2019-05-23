@@ -24,6 +24,7 @@ public class InfinityMode : GameState
     private int rallyCount = 0;
 
     private List<BlockGroup> blockGroup;
+    private List<int> hps;
 
     public override IEnumerator Initialize(params object[] _data)
     {
@@ -50,7 +51,7 @@ public class InfinityMode : GameState
 
     public override void Begin()
     {
-        inventory.Initialize(inventoryBlocks);
+        inventory.Initialize(inventoryBlocks, hps);
         shotButton.interactable = false;
         path.Calculate(ball.shotDegree);
 
@@ -178,7 +179,7 @@ public class InfinityMode : GameState
             SoundManager.Instance.PlaySe("Inventory");
             SetInventoryBlock(unlockGroup[groupIndex]);
 
-            inventory.Initialize(inventoryBlocks);
+            inventory.Initialize(inventoryBlocks, hps);
         }
         else
         {
@@ -204,13 +205,14 @@ public class InfinityMode : GameState
     public void SetInventoryBlock(BlockGroup group)
     {
         inventoryBlocks = new List<Block>();
+        hps = new List<int>();
 
         // block index로 찾을 수 있게 변경해야됨
         for (int i = 0; i < group.Count; i++)
         {
             Block block = usedBlocks.Find(x => x.index == group.blockIndex[i]);
-            block.hp = group.blockHp[i];
             inventoryBlocks.Add(block);
+            hps.Add(group.blockHp[i]);
         }
     }
 
