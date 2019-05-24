@@ -111,9 +111,17 @@ public class NoGuideChallenge : GameState
             // 클리어보상 있는지 체크
             SaveData.noGuideClear += 1;
 
-            var unlockSkin = unlockSkins.Find(x => x.unlockLevel == level);
+            if(SaveData.noGuideClear == GameManager.Instance.NoGuideCount)
+            {
+                PopupContoller.Instance.Show("ChallengeCompletePopup", "NoGuideCallenge");
+            }
+            else
+            {
+                var unlockSkin = unlockSkins.Find(x => x.unlockLevel == level);
 
-            PopupContoller.Instance.Show("ChallengeClearPopup", "NoGuideCallenge", unlockSkin);
+                PopupContoller.Instance.Show("ChallengeClearPopup", "NoGuideCallenge", unlockSkin);
+            }
+
         }
         else
         {

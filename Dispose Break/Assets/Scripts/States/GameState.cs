@@ -7,13 +7,8 @@ using UnityEngine.Events;
 
 public abstract class GameState : State
 {
-    // 공 예상 이동경로 길이
-    public const float PATH_DISTANCE = 10f;
-
     // 공
     public Ball ball;
-    // 공 발사 방향화살표
-    public Transform directionArrow;
     // 블럭 인벤토리
     public BlockInventory inventory;
     // 해당 모드에서 사용되는 블럭들
@@ -52,13 +47,7 @@ public abstract class GameState : State
         selectBlock = null;
     }
 
-    public virtual void DisposeBlock(Block block)
-    {
-        selectBlock = Instantiate(block, transform);
-        selectBlock.StartMoved();
-
-        disposedBlocks.Add(selectBlock);
-    }
+    public abstract void DisposeBlock(Block block);
 
     protected abstract IEnumerator Shot();
 
