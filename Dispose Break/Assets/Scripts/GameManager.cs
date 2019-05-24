@@ -10,6 +10,12 @@ public class GameManager : Singleton<GameManager>
     public List<BallSkin> ballSkins = new List<BallSkin>();
     public BallSkin equipedBallSkin;
 
+    private int onewayCount;
+    private int noguideCount;
+
+    public int OneWayCount { get { return onewayCount; } }
+    public int NoGuideCount {  get { return noguideCount; } }
+
     private IEnumerator Start()
     {
         Application.targetFrameRate = 60;
@@ -29,15 +35,18 @@ public class GameManager : Singleton<GameManager>
         Database.Load();
         ballSkins = Database.LoadBallSkins();
 
+        onewayCount = GetChallengeCount("OneWayChallenge");
+        noguideCount = GetChallengeCount("NoGuideChallenge");
+
         SoundManager.Instance.PlayBgm(0);
     }
 
     private void Update()
     {
-        if(Input.GetKeyDown(KeyCode.Return))
-        {
-            SaveData.goods += 10;
-        }
+        //if(Input.GetKeyDown(KeyCode.Return))
+        //{
+        //    SaveData.goods += 10;
+        //}
 
         if(Input.GetKey(KeyCode.LeftControl) && Input.GetKeyDown(KeyCode.F11))
         {
@@ -59,5 +68,18 @@ public class GameManager : Singleton<GameManager>
     private void OnApplicationQuit()
     {
         Database.Save();
+    }
+
+    private int GetChallengeCount(string challenge)
+    {
+        string query = string.Format("SELECT COUNT(*) FROM {0};", challenge);
+        int result = 0;
+
+        Database.Query(query, (reader) =>
+        {
+            result = reader.GetInt32(0);
+        });
+
+        return result;
     }
 }

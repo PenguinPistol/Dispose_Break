@@ -16,6 +16,7 @@ public class InfinityMode : GameState
     public Text goodsText;
     public Goods goods;
     public AudioSource sePlayer;
+    public Animator wallPoint;
 
     private int rallyScore = 0;
     private int currentScore = 0;
@@ -39,6 +40,8 @@ public class InfinityMode : GameState
         ball.shotDegree = GameConst.BallAngleDefault;
         ball.wallAction = () =>
         {
+            wallPoint.transform.position = ball.transform.position;
+            wallPoint.Play("WallPoint");
             rallyScore++;
         };
 
@@ -95,7 +98,6 @@ public class InfinityMode : GameState
             }
         }
     }
-
 
     public override void TouchMoved(Vector3 touchPosition, int touchIndex)
     {
