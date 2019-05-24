@@ -63,7 +63,7 @@ public class StateController : Singleton<StateController>
         }
         else
         {
-            Debug.Log("state key is not contain");
+            Debug.LogFormat("state key is not contain : {0}", _name);
             currentState = beforeState;
         }
 

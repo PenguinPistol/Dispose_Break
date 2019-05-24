@@ -10,6 +10,11 @@ public class GuidePath : MonoBehaviour
     public Transform hitPoint;
     public float length;
 
+    //private void Start()
+    //{
+    //    hitPoint.GetComponent<SpriteRenderer>().sprite = GameManager.Instance.equipedBallSkin.sprite;
+    //}
+
     public void Calculate(float targetAngle)
     {
         Vector3 dir = new Vector3(Mathf.Cos(Mathf.Deg2Rad * targetAngle), Mathf.Sin(Mathf.Deg2Rad * targetAngle));
