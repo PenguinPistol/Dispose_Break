@@ -6,8 +6,11 @@ using com.TeamPlug.Input;
 
 public class OneWayChallenge : GameState
 {
+    private const string CHALLENGE_NAME = "OneWayChallenge";
+
     public Text goodsText;
     public AudioSource sePlayer;
+    public Animator tutorial;
 
     private BlockGroup blockGroup;
     private List<int> hps;
@@ -49,6 +52,14 @@ public class OneWayChallenge : GameState
     public override void Release()
     {
         TouchController.Instance.RemoveObservable(this);
+    }
+
+    public override void TouchBegan(Vector3 touchPosition, int touchIndex)
+    {
+        if(tutorial.gameObject.activeSelf)
+        {
+            tutorial.Play("Fadeout");
+        }
     }
 
     public override void TouchMoved(Vector3 touchPosition, int touchIndex)
@@ -101,21 +112,28 @@ public class OneWayChallenge : GameState
             // 클리어보상 있는지 체크
             SaveData.oneWayClear += 1;
 
-            var unlockSkin = unlockSkins.Find(x => x.unlockLevel == level);
+            if (SaveData.oneWayClear == GameManager.Instance.OneWayCount)
+            {
+                PopupContoller.Instance.Show("ChallengeCompletePopup", CHALLENGE_NAME);
+            }
+            else
+            {
+                var unlockSkin = unlockSkins.Find(x => x.unlockLevel == level);
 
-            PopupContoller.Instance.Show("ChallengeClearPopup", "OneWayChallenge", unlockSkin);
+                PopupContoller.Instance.Show("ChallengeClearPopup", CHALLENGE_NAME, unlockSkin);
+            }
         }
         else
         {
             // failed
-            PopupContoller.Instance.Show("ChallengeFailedPopup", "OneWayChallenge");
+            PopupContoller.Instance.Show("ChallengeFailedPopup", CHALLENGE_NAME);
         }
     }
 
     public void GetLevelData()
     {
         string where = string.Format("Stage = {0};", SaveData.oneWayClear+1);
-        string query = string.Format(Database.SELECT_TABLE_ALL_WHERE, "OneWayChallenge", where);
+        string query = string.Format(Database.SELECT_TABLE_ALL_WHERE, CHALLENGE_NAME, where);
 
         Database.Query(query, (reader) =>
         {
