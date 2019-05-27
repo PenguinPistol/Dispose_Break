@@ -17,6 +17,5 @@ public class OptionPopup : TwoButtonPopup
     // coupon
     public override void CancelAction()
     {
-        Close();
     }
 }

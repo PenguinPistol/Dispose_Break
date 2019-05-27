@@ -17,6 +17,8 @@ public abstract class GameState : State
     public Button shotButton;
     // 발사 경로
     public GuidePath path;
+    // 공 내리기 버튼
+    public Button dropButton;
 
     [HideInInspector]
     // 선택한 블록
@@ -65,5 +67,17 @@ public abstract class GameState : State
             path.gameObject.SetActive(false);
         }
         StartCoroutine(Shot());
+    }
+
+    public void DropBall()
+    {
+        dropButton.gameObject.SetActive(false);
+
+        ball.rigidbody2D.velocity = Vector3.zero;
+        ball.isDroped = true;
+        ball.rigidbody2D.isKinematic = true;
+        ball.bounceCount = 0;
+
+        StartCoroutine(ball.ResetShot());
     }
 }

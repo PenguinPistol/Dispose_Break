@@ -60,7 +60,9 @@ public class Block : MonoBehaviour
                 return;
             }
 
-            if(isReversed)
+            collision.gameObject.GetComponent<Ball>().bounceCount = 0;
+
+            if (isReversed)
             {
                 collision.gameObject.GetComponent<Ball>().Reverse();
             }
@@ -106,14 +108,19 @@ public class Block : MonoBehaviour
         disposeArea.gameObject.SetActive(true);
     }
 
-    public void CheckPosition()
+    public bool CheckPosition()
     {
+        bool result = true;
+
         if(isDisposed == false)
         {
             transform.position = prevPosition;
+            result = false;
         }
 
         isMoved = false;
         disposeArea.gameObject.SetActive(false);
+
+        return result;
     }
 }

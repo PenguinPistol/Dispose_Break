@@ -110,16 +110,21 @@ public class NoGuideChallenge : GameState
 
         while(ball.Finished == false)
         {
+            if (ball.bounceCount >= GameConst.DropCount)
+            {
+                dropButton.gameObject.SetActive(true);
+            }
+
             yield return null;
         }
 
-        if (disposedBlocks.FindAll(x => x.isBreaked).Count == disposedBlocks.Count)
+        if (disposedBlocks.FindAll(x => x.isBreaked).Count == disposedBlocks.Count && ball.isDroped == false)
         {
             // clear
             // 클리어보상 있는지 체크
             SaveData.noGuideClear += 1;
 
-            if(SaveData.noGuideClear == GameManager.Instance.NoGuideCount)
+            if (SaveData.noGuideClear == GameManager.Instance.NoGuideCount)
             {
                 PopupContoller.Instance.Show("ChallengeCompletePopup", CHALLENGE_NAME);
             }

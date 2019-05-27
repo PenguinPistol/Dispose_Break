@@ -43,4 +43,31 @@ public class BlockInventory : MonoBehaviour
             }
         }
     }
+
+    public void Add(Block block, int hp)
+    {
+        string key = block.blockName + hp;
+
+        if (items.ContainsKey(key))
+        {
+            items[key].count += 1;
+        }
+        else
+        {
+            items[key] = Instantiate(itemPrefab, contentView);
+            items[key].Initialize(block, 1, hp);
+            items[key].pointerDown = () =>
+            {
+                items[key].count -= 1;
+
+                GameManager.Instance.currentGameMode.DisposeBlock(items[key].block);
+
+                if (items[key].count <= 0)
+                {
+                    Destroy(items[key].gameObject);
+                    items.Remove(key);
+                }
+            };
+        }
+    }
 }

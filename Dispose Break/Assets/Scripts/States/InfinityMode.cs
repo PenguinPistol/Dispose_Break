@@ -23,6 +23,7 @@ public class InfinityMode : GameState
     private State state = State.Ready;
 
     private int rallyCount = 0;
+    private int groupIndex = 0;
 
     private List<BlockGroup> blockGroup;
     private List<int> hps;
@@ -35,7 +36,7 @@ public class InfinityMode : GameState
 
         blockGroup = GetUnlockGroup();
 
-        SetInventoryBlock(blockGroup[0]);
+        SetInventoryBlock(blockGroup[groupIndex]);
 
         ball.shotDegree = GameConst.BallAngleDefault;
         ball.wallAction = () =>
@@ -113,7 +114,14 @@ public class InfinityMode : GameState
     {
         if(selectBlock != null)
         {
-            selectBlock.CheckPosition();
+            bool result = selectBlock.CheckPosition();
+
+            if(result == false)
+            {
+                inventory.Add(selectBlock, selectBlock.hp);
+                disposedBlocks.Remove(selectBlock);
+                Destroy(selectBlock.gameObject);
+            }
         }
 
         selectBlock = null;
@@ -147,25 +155,94 @@ public class InfinityMode : GameState
 
         while (ball.Finished == false)
         {
+            if(ball.bounceCount >= GameConst.DropCount)
+            {
+                dropButton.gameObject.SetActive(true);
+            }
+
             yield return null;
         }
 
-        if (disposedBlocks.FindAll(x => x.isBreaked).Count == disposedBlocks.Count)
+        if(ball.isDroped == false)
         {
-            // 성공
-            yield return ball.ResetShot();
-
-            currentScore += rallyScore;
-            rallyScore = 0;
-            rallyCount++;
-
-            goods.Pass();
-
-            if(rallyCount % GameConst.GoodsSpawnCondition == 0)
+            if (disposedBlocks.FindAll(x => x.isBreaked).Count == disposedBlocks.Count)
             {
-                goods.Show();
-            }
+                // 성공
+                yield return ball.ResetShot();
 
+                currentScore += rallyScore;
+                rallyScore = 0;
+                rallyCount++;
+
+                goods.Pass();
+
+                if (rallyCount % GameConst.GoodsSpawnCondition == 0)
+                {
+                    goods.Show();
+                }
+
+                path.Calculate(ball.shotDegree);
+                path.gameObject.SetActive(true);
+
+                foreach (var item in disposedBlocks)
+                {
+                    Destroy(item.gameObject);
+                }
+                disposedBlocks.Clear();
+
+                var unlockGroup = GetUnlockGroup();
+                groupIndex = Random.Range(1, unlockGroup.Count);
+
+                SoundManager.Instance.PlaySe("Inventory");
+                SetInventoryBlock(unlockGroup[groupIndex]);
+
+                var check = unlockGroup[groupIndex];
+
+                if (SaveData.infoShield == false)
+                {
+                    if (check.blockIndex.Contains(7) || check.blockIndex.Contains(8))
+                    {
+                        SaveData.infoShield = true;
+                        PopupContoller.Instance.Show("InfoPopup", 1);
+                    }
+                }
+
+                if (SaveData.infoHalf == false)
+                {
+                    if (check.blockIndex.Contains(6))
+                    {
+                        SaveData.infoHalf = true;
+                        PopupContoller.Instance.Show("InfoPopup", 2);
+                    }
+                }
+
+                if (SaveData.infoReverse == false)
+                {
+                    if (check.blockIndex.Contains(9))
+                    {
+                        SaveData.infoReverse = true;
+                        PopupContoller.Instance.Show("InfoPopup", 3);
+                    }
+                }
+
+                inventory.Initialize(inventoryBlocks, hps);
+
+                dropButton.gameObject.SetActive(false);
+            }
+            else
+            {
+                // 실패
+                if (SaveData.bestScore < currentScore)
+                {
+                    SaveData.bestScore = currentScore;
+                }
+
+                SoundManager.Instance.PlaySe("Clear");
+                PopupContoller.Instance.Show("InfinityResultPopup", currentScore);
+            }
+        }
+        else
+        {
             path.Calculate(ball.shotDegree);
             path.gameObject.SetActive(true);
 
@@ -176,23 +253,11 @@ public class InfinityMode : GameState
             disposedBlocks.Clear();
 
             var unlockGroup = GetUnlockGroup();
-            int groupIndex = Random.Range(1, unlockGroup.Count);
 
             SoundManager.Instance.PlaySe("Inventory");
             SetInventoryBlock(unlockGroup[groupIndex]);
-
             inventory.Initialize(inventoryBlocks, hps);
-        }
-        else
-        {
-            // 실패
-            if(SaveData.bestScore < currentScore)
-            {
-                SaveData.bestScore = currentScore;
-            }
-
-            SoundManager.Instance.PlaySe("Clear");
-            PopupContoller.Instance.Show("InfinityResultPopup", currentScore);
+            ball.isDroped = false;
         }
 
         shotButton.interactable = false;

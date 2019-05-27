@@ -21,4 +21,6 @@ public class GameConst
     public static float LootProbabilityNormal = 70f;
     public static float LootProbabilityRare = 25f;
     public static float LootProbabilityUnique = 5f;
+
+    public static int DropCount = 1;
 } 

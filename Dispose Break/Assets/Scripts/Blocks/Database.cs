@@ -80,7 +80,10 @@ public static class Database
             query.Append("\'EquipSkin\' TEXT, ");
             query.Append("\'UnlockSkins\' TEXT, ");
             query.Append("\'BgmMute\' TEXT, ");
-            query.Append("\'SeMute\' TEXT);");
+            query.Append("\'SeMute\' TEXT, ");
+            query.Append("\'InfoShield\' TEXT, ");
+            query.Append("\'InfoHalf\' TEXT, ");
+            query.Append("\'InfoReverse\' TEXT);");
 
             Query(query.ToString(), (reader) => { });
         }
@@ -103,7 +106,10 @@ public static class Database
         query.AppendFormat("\'{0}\',", SaveData.equipSkin);
         query.AppendFormat("\'{0}\',", SaveData.UnlockSkins);
         query.AppendFormat("\'{0}\',", SoundManager.Instance.muteBgm);
-        query.AppendFormat("\'{0}\');", SoundManager.Instance.muteSe);
+        query.AppendFormat("\'{0}\', ", SoundManager.Instance.muteSe);
+        query.AppendFormat("\'{0}\', ", SaveData.infoShield);
+        query.AppendFormat("\'{0}\', ", SaveData.infoHalf);
+        query.AppendFormat("\'{0}\');", SaveData.infoReverse);
 
         Debug.Log(query.ToString());
 
@@ -156,6 +162,10 @@ public static class Database
 
             SoundManager.Instance.muteBgm = bool.Parse(reader.GetString(6));
             SoundManager.Instance.muteSe = bool.Parse(reader.GetString(7));
+
+            SaveData.infoShield = bool.Parse(reader.GetString(8));
+            SaveData.infoHalf = bool.Parse(reader.GetString(9));
+            SaveData.infoReverse = bool.Parse(reader.GetString(10));
         });
 
         query.Clear();

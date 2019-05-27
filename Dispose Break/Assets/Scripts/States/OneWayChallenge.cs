@@ -103,10 +103,15 @@ public class OneWayChallenge : GameState
 
         while(ball.Finished == false)
         {
+            if (ball.bounceCount >= GameConst.DropCount)
+            {
+                dropButton.gameObject.SetActive(true);
+            }
+
             yield return null;
         }
 
-        if (disposedBlocks.FindAll(x => x.isBreaked).Count == disposedBlocks.Count)
+        if (disposedBlocks.FindAll(x => x.isBreaked).Count == disposedBlocks.Count && ball.isDroped == false)
         {
             // clear
             // 클리어보상 있는지 체크
