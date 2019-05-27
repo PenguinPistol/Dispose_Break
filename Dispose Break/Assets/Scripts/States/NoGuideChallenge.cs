@@ -6,14 +6,18 @@ using com.TeamPlug.Input;
 
 public class NoGuideChallenge : GameState
 {
+    private const string CHALLENGE_NAME = "NoGuideChallenge";
+
+    public Text goodsText;
+    public Transform arrow;
+    public AudioSource sePlayer;
+    public Animator tutorial;
+
     private BlockGroup blockGroup;
     private List<BallSkin> unlockSkins;
     private List<int> hps;
     private int level;
 
-    public Text goodsText;
-    public Transform arrow;
-    public AudioSource sePlayer;
 
     public override IEnumerator Initialize(params object[] _data)
     {
@@ -59,6 +63,10 @@ public class NoGuideChallenge : GameState
 
     public override void TouchBegan(Vector3 touchPosition, int touchIndex)
     {
+        if (tutorial.gameObject.activeSelf)
+        {
+            tutorial.Play("Fadeout");
+        }
     }
 
     public override void TouchMoved(Vector3 touchPosition, int touchIndex)
@@ -113,27 +121,27 @@ public class NoGuideChallenge : GameState
 
             if(SaveData.noGuideClear == GameManager.Instance.NoGuideCount)
             {
-                PopupContoller.Instance.Show("ChallengeCompletePopup", "NoGuideCallenge");
+                PopupContoller.Instance.Show("ChallengeCompletePopup", CHALLENGE_NAME);
             }
             else
             {
                 var unlockSkin = unlockSkins.Find(x => x.unlockLevel == level);
 
-                PopupContoller.Instance.Show("ChallengeClearPopup", "NoGuideCallenge", unlockSkin);
+                PopupContoller.Instance.Show("ChallengeClearPopup", CHALLENGE_NAME, unlockSkin);
             }
 
         }
         else
         {
             // failed
-            PopupContoller.Instance.Show("ChallengeFailedPopup", "NoGuideCallenge");
+            PopupContoller.Instance.Show("ChallengeFailedPopup", CHALLENGE_NAME);
         }
     }
 
     public void GetLevelData()
     {
         string where = string.Format("Stage = {0};", SaveData.noGuideClear+1);
-        string query = string.Format(Database.SELECT_TABLE_ALL_WHERE, "NoGuideChallenge", where);
+        string query = string.Format(Database.SELECT_TABLE_ALL_WHERE, CHALLENGE_NAME, where);
 
         Database.Query(query, (reader) =>
         {

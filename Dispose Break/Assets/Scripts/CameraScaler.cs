@@ -20,7 +20,7 @@ public class CameraScaler : MonoBehaviour
         float targetAspect = TARGET_WIDTH_RATIO / TARGET_HEIGHT_RATIO;
         float newAspect = targetAspect / camera.aspect;
 
-        camera.orthographicSize = camera.orthographicSize * newAspect;
+        camera.orthographicSize *= newAspect;
 
         #region 해상도 고정(위아래 빈공간 삽입)
         //camera.aspect = TARGET_WIDTH_RATIO / TARGET_HEIGHT_RATIO;
