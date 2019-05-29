@@ -48,10 +48,10 @@ public class GameManager : Singleton<GameManager>
         //    SaveData.goods += 10;
         //}
 
-        if(Input.GetKey(KeyCode.LeftControl) && Input.GetKeyDown(KeyCode.F11))
-        {
-            SaveData.oneWayClear = 0;
-        }
+        //if(Input.GetKey(KeyCode.LeftControl) && Input.GetKeyDown(KeyCode.F11))
+        //{
+        //    SaveData.oneWayClear = 0;
+        //}
     }
 
     // 

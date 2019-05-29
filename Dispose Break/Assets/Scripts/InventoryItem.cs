@@ -20,8 +20,6 @@ public class InventoryItem : MonoBehaviour, IPointerDownHandler
         this.block.hp = hp;
         this.count = count;
 
-        print(block.name);
-
         image.sprite = Resources.Load<Sprite>(string.Format("Sprites/Block/Inventory/{0}", block.name));
         image.SetNativeSize();
 

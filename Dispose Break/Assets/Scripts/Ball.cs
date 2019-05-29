@@ -14,10 +14,12 @@ public class Ball : MonoBehaviour
     public float speed;
     public Vector3 direction;
     public UnityAction wallAction;
+    public int bounceCount;
+    public bool isDroped;
+    public new Rigidbody2D rigidbody2D;
 
     private bool isShoted;
     private Vector3 shotPosition;
-    private new Rigidbody2D rigidbody2D;
     private bool isFinished;
     private SpriteRenderer sr;
 
@@ -67,6 +69,8 @@ public class Ball : MonoBehaviour
             wallAction?.Invoke();
 
             SoundManager.Instance.PlaySe("Break");
+
+            bounceCount++;
         }
     }
 
@@ -78,6 +82,7 @@ public class Ball : MonoBehaviour
             rigidbody2D.isKinematic = true;
 
             // 발사된 후 발사라인에 도달 시
+            bounceCount = 0;
             isFinished = true;
         }
     }
@@ -100,14 +105,16 @@ public class Ball : MonoBehaviour
 
         transform.position = shotPosition;
 
-        do
+        if (isDroped == false)
         {
-            shotDegree = Random.Range(GameConst.BallAngleMin, GameConst.BallAngleMax);
+            do
+            {
+                shotDegree = Random.Range(GameConst.BallAngleMin, GameConst.BallAngleMax);
+            }
+            while (80f < shotDegree && shotDegree < 100f);
+
+            direction = Quaternion.AngleAxis(shotDegree, Vector3.forward) * Vector3.right;
         }
-        while (80f < shotDegree && shotDegree < 100f);
-
-        direction = Quaternion.AngleAxis(shotDegree, Vector3.forward) * Vector3.right;
-
         isShoted = false;
     }
 }
