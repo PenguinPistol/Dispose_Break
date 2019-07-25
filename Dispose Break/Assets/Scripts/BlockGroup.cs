@@ -16,4 +16,9 @@ public class BlockGroup
         blockIndex = new List<int>();
         blockHp = new List<int>();
     }
+
+    public bool ContainsBlock(int index)
+    {
+        return blockIndex.Contains(index);
+    }
 }

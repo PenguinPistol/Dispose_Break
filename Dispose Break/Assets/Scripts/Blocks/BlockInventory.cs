@@ -1,68 +1,69 @@
-﻿using System.Collections.Generic;
+﻿using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 
 public class BlockInventory : MonoBehaviour
 {
-    public Dictionary<string, InventoryItem> items;
+    private const string KEY_FORTMAT = "{0}_{1}";
+
+    private Dictionary<string, InventoryItem> items;
+
     public InventoryItem itemPrefab;
     public Transform contentView;
 
     public int Count { get { return items.Count; } }
 
-    private void Start()
+    public IEnumerator Initialize(BlockGroup group)
     {
+        yield return null;
+
         items = new Dictionary<string, InventoryItem>();
+
+        for (int i = 0; i < group.Count; i++)
+        {
+            int index = group.blockIndex[i];
+            int hp = group.blockHp[i];
+
+            Add(index, hp);
+        }
+
+        SoundManager.Instance.PlaySe("Inventory");
     }
 
-    public void Initialize(List<Block> blockList, List<int> hp)
+    private void Update()
     {
-        for (int i = 0; i < blockList.Count; i++)
+        if(Input.GetKeyDown(KeyCode.F10))
         {
-            string key = blockList[i].blockName + hp[i];
-
-            if (items.ContainsKey(key))
+            foreach (var key in items.Keys)
             {
-                items[key].count += 1;
-            }
-            else
-            {
-                items[key] = Instantiate(itemPrefab, contentView);
-                items[key].Initialize(blockList[i], 1, hp[i]);
-                items[key].pointerDown = () =>
-                {
-                    items[key].count -= 1;
-
-                    GameManager.Instance.currentGameMode.DisposeBlock(items[key].block);
-
-                    if (items[key].count <= 0)
-                    {
-                        Destroy(items[key].gameObject);
-                        items.Remove(key);
-                    }
-                };
+                Debug.Log(key);
             }
         }
     }
 
-    public void Add(Block block, int hp)
+    public void Add(int index, int hp)
     {
-        string key = block.blockName + hp;
+        string key = string.Format(KEY_FORTMAT, index, hp);
 
         if (items.ContainsKey(key))
         {
-            items[key].count += 1;
+            // 이미 추가된 항목이면 카운트 증가
+            items[key].count++;
         }
         else
         {
+            // 새로 추가
             items[key] = Instantiate(itemPrefab, contentView);
-            items[key].Initialize(block, 1, hp);
-            items[key].pointerDown = () =>
+            items[key].Initialize(index, hp);
+            items[key].PointerDownCallback = (position) =>
             {
-                items[key].count -= 1;
+                position = Camera.main.ScreenToWorldPoint(position);
+                position.z = 0;
+                GameManager.Instance.currentGameMode.DisposeBlock(index, hp, position);
 
-                GameManager.Instance.currentGameMode.DisposeBlock(items[key].block);
+                items[key].count--;
 
-                if (items[key].count <= 0)
+                if(items[key].count == 0)
                 {
                     Destroy(items[key].gameObject);
                     items.Remove(key);

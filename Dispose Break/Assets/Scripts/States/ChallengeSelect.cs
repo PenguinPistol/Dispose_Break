@@ -68,10 +68,10 @@ public class ChallengeSelect : State
     {
         goodsText.text = string.Format("{0}", SaveData.goods);
 
-        //if(Input.GetKeyDown(KeyCode.Return))
-        //{
-        //    oneWayStars.GetChild(0).GetComponent<Animator>().Play("Clear");
-        //}
+        if (Input.GetKeyDown(KeyCode.Escape))
+        {
+            PopupContoller.Instance.Show("QuitPopup");
+        }
     }
 
 

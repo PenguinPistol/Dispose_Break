@@ -1,0 +1,49 @@
+{
+  "project_info": {
+    "project_number": "140206518171",
+    "firebase_url": "https://disposebreak.firebaseio.com",
+    "project_id": "disposebreak",
+    "storage_bucket": "disposebreak.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:140206518171:android:97821c48ac64b9e4",
+        "android_client_info": {
+          "package_name": "com.teamplug.disposebreak"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "140206518171-q13l3actf2dodqqaabh7jrhq8kr8guns.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.teamplug.disposebreak",
+            "certificate_hash": "7111c42ec5251747112ee29f74e2adef13e3ff4d"
+          }
+        },
+        {
+          "client_id": "140206518171-8313d7niod66v2tr4nfqmshiebkpd3pn.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBzjQ0Oo5kPg-yVm19N_noPFLcprZ08O50"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "140206518171-8313d7niod66v2tr4nfqmshiebkpd3pn.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      },
+      "admob_app_id": "ca-app-pub-3117214092102716~3202771270"
+    }
+  ],
+  "configuration_version": "1"
+}

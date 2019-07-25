@@ -1,6 +1,6 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
+using UnityEngine.UI;
+using UnityEngine.Events;
 
 public class ChallengeFailedPopup : ThreeButtonPopup
 {
@@ -9,6 +9,16 @@ public class ChallengeFailedPopup : ThreeButtonPopup
     public override void OnOpend(params object[] data)
     {
         challengeName = string.Format("{0}", data[0]);
+        AdsManager.Instance.RewardCallback = (UnityAction)data[1];
+        
+        if(AdsManager.Instance.LoadedReward == false)
+        {
+            positiveButton.interactable = false;
+        }
+        else
+        {
+            positiveButton.interactable = true;
+        }
     }
 
     public override void NegativeAction()
@@ -26,8 +36,11 @@ public class ChallengeFailedPopup : ThreeButtonPopup
 
     public override void PositiveAction()
     {
+        AdsManager.Instance.CancelCallback = () =>
+        {
+            PopupContoller.Instance.Show(this.GetType().Name);
+        };
         // continue
-        // 일단 광고가 없어서 그냥 챌린지 선택으로 넘어감
-        StateController.Instance.ChangeState("ChallengeSelect");
+        AdsManager.Instance.ShowReward();
     }
 }

@@ -54,5 +54,7 @@ public class GuidePath : MonoBehaviour
             path2.gameObject.SetActive(false);
             hitPoint.gameObject.SetActive(false);
         }
+
+        gameObject.SetActive(true);
     }
 }

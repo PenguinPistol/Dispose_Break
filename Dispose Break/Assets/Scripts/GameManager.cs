@@ -6,9 +6,15 @@ using System.Data;
 
 public class GameManager : Singleton<GameManager>
 {
-    public GameState currentGameMode;
-    public List<BallSkin> ballSkins = new List<BallSkin>();
+    // 사용되는 블럭들
+    public List<Block> usedBlocks;
+    // 공 스킨들
+    public List<BallSkin> ballSkins;
+    // 장착한 공 스킨
     public BallSkin equipedBallSkin;
+
+    // 현재 게임모드
+    public GameState currentGameMode;
 
     private int onewayCount;
     private int noguideCount;
@@ -16,38 +22,32 @@ public class GameManager : Singleton<GameManager>
     public int OneWayCount { get { return onewayCount; } }
     public int NoGuideCount {  get { return noguideCount; } }
 
-    private IEnumerator Start()
+    private void Start()
     {
         Application.targetFrameRate = 60;
-
-        Database.ReadGameConst();
-        CSVToSqlite parser = new CSVToSqlite();
-
-        yield return parser.Parse("Block");
-        yield return parser.Parse("BallSkin");
-        yield return parser.Parse("InfinityModeGroup");
-        yield return parser.Parse("NoGuideChallenge");
-        yield return parser.Parse("OneWayChallenge");
 
         StateController.Instance.Init();
         StateController.Instance.ChangeState(0);
 
         Database.Load();
         ballSkins = Database.LoadBallSkins();
+        if(SaveData.unlockSkins.Contains(1) == false)
+        {
+            equipedBallSkin = ballSkins[0];
+            ballSkins[0].isUnlock = true;
+            SaveData.unlockSkins.Add(1);
+        }
 
         onewayCount = GetChallengeCount("OneWayChallenge");
         noguideCount = GetChallengeCount("NoGuideChallenge");
 
         SoundManager.Instance.PlayBgm(0);
+
+        AdsManager.Instance.ShowBanner();
     }
 
     private void Update()
     {
-        //if(Input.GetKeyDown(KeyCode.Return))
-        //{
-        //    SaveData.goods += 10;
-        //}
-
         //if(Input.GetKey(KeyCode.LeftControl) && Input.GetKeyDown(KeyCode.F11))
         //{
         //    SaveData.oneWayClear = 0;
@@ -82,4 +82,11 @@ public class GameManager : Singleton<GameManager>
 
         return result;
     }
+
+    public Block GetBlockByIndex(int index)
+    {
+        return usedBlocks.Find(x => x.index == index);
+    }
+
+    
 }

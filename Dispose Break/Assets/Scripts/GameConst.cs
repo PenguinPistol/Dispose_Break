@@ -22,5 +22,7 @@ public class GameConst
     public static float LootProbabilityRare = 25f;
     public static float LootProbabilityUnique = 5f;
 
-    public static int DropCount = 1;
+    public static float InterstitialAdsCooltime = 120f;
+
+    public static int DropCount = 10;
 } 

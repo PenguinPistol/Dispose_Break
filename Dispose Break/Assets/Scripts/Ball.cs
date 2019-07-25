@@ -5,116 +5,115 @@ using UnityEngine.Events;
 
 public class Ball : MonoBehaviour
 {
+    private enum State
+    {
+        Ready, Shot, Return
+    }
+
+    // 사용되는 태그들
     public const string TAG_SHOT_LINE = "Shot Line";
     public const string TAG_BLOCK = "Block";
     public const string TAG_WALL = "Wall";
     public const string TAG_GOODS = "Goods";
 
-    public float shotDegree;
-    public float speed;
-    public Vector3 direction;
-    public UnityAction wallAction;
+    // 인스펙터 항목
+    public new Rigidbody2D rigidbody;
+    public float degree;
     public int bounceCount;
-    public bool isDroped;
-    public new Rigidbody2D rigidbody2D;
 
-    private bool isShoted;
-    private Vector3 shotPosition;
+    public UnityAction WallHitCallback;
+
+    private State state;
+    private Vector3 direction;
+    private float speed;
     private bool isFinished;
-    private SpriteRenderer sr;
+    private new SpriteRenderer renderer;
 
     public bool Finished { get { return isFinished; } }
 
-    private void Start()
+    public void Initialize(float degree)
     {
-        shotPosition = transform.position;
+        rigidbody = GetComponent<Rigidbody2D>();
+        renderer = GetComponent<SpriteRenderer>();
+
         speed = GameConst.DefaultSpeed;
-        direction = Quaternion.AngleAxis(shotDegree, Vector3.forward) * Vector3.right;
-        rigidbody2D = GetComponent<Rigidbody2D>();
-        sr = GetComponent<SpriteRenderer>();
+
+        this.degree = degree;
+        direction = Quaternion.AngleAxis(degree, Vector3.forward) * Vector3.right;
         
         if(GameManager.Instance.equipedBallSkin != null)
         {
-            sr.sprite = GameManager.Instance.equipedBallSkin.sprite;
+            renderer.sprite = GameManager.Instance.equipedBallSkin.sprite;
         }
 
-        rigidbody2D.isKinematic = true;
+        state = State.Ready;
     }
 
     public void Shot()
     {
-        if (isShoted)
+        if (state != State.Ready)
         {
             return;
         }
 
-        isShoted = true;
+        state = State.Shot;
         isFinished = false;
 
-        rigidbody2D.isKinematic = false;
-        rigidbody2D.velocity = (direction * speed);
+        rigidbody.velocity = (direction * speed);
     }
 
     public void Reverse()
     {
-        Vector2 vel = rigidbody2D.velocity;
+        Vector2 vel = rigidbody.velocity;
         vel.x *= -1;
-        rigidbody2D.velocity = vel;
+        rigidbody.velocity = vel;
+    }
+
+    public void SetDirection()
+    {
+        do
+        {
+            degree = Random.Range(GameConst.BallAngleMin, GameConst.BallAngleMax);
+        }
+        while (80f < degree && degree < 100f);
+
+        direction = Quaternion.AngleAxis(degree, Vector3.forward) * Vector3.right;
     }
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
         if(collision.collider.tag.Equals(TAG_WALL))
         {
-            wallAction?.Invoke();
+            if(state == State.Shot)
+            {
+                WallHitCallback?.Invoke();
 
-            SoundManager.Instance.PlaySe("Break");
+                SoundManager.Instance.PlaySe("Break");
 
-            bounceCount++;
+                bounceCount++;
+            }
         }
     }
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        if (collision.gameObject.tag.Equals(TAG_SHOT_LINE) && isShoted)
+        if (collision.gameObject.tag.Equals(TAG_SHOT_LINE))
         {
-            rigidbody2D.velocity = Vector2.zero;
-            rigidbody2D.isKinematic = true;
+            if (state == State.Shot)
+            {
+                rigidbody.velocity = Vector2.zero;
 
-            // 발사된 후 발사라인에 도달 시
-            bounceCount = 0;
-            isFinished = true;
+                // 발사된 후 발사라인에 도달 시
+                bounceCount = 0;
+                isFinished = true;
+
+                state = State.Ready;
+            }
         }
     }
 
-    public IEnumerator ResetShot()
+    public void Drop()
     {
-        Vector3 startPosition = transform.position;
-        float distance = Vector3.Distance(transform.position, shotPosition);
-        float startTime = Time.time;
-
-        while (Vector3.Distance(shotPosition, transform.position) > 0.1f)
-        {
-            float distcoverd = (Time.time - startTime) * GameConst.DefaultSpeed * 2;
-            float fracJouney = distcoverd / distance;
-
-            transform.position = Vector3.Lerp(startPosition, shotPosition, fracJouney);
-
-            yield return null;
-        }
-
-        transform.position = shotPosition;
-
-        if (isDroped == false)
-        {
-            do
-            {
-                shotDegree = Random.Range(GameConst.BallAngleMin, GameConst.BallAngleMax);
-            }
-            while (80f < shotDegree && shotDegree < 100f);
-
-            direction = Quaternion.AngleAxis(shotDegree, Vector3.forward) * Vector3.right;
-        }
-        isShoted = false;
+        rigidbody.velocity = Vector3.down * speed * 2;
     }
 }

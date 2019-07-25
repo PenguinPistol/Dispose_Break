@@ -12,17 +12,17 @@ public class Goods : MonoBehaviour
     private Rect spawnRect;
 
     public bool IsShow { get { return gameObject.activeSelf; } }
+    public int LivingCount { get { return GameConst.GoodsSpawnCondition - life; } }
 
     private void Awake()
     {
         Vector2 size = spawnRange.size / 2f;
         float offsetY = spawnRange.transform.localPosition.y;
 
-        Debug.LogFormat("size : {0}", spawnRange.size);
-
         spawnRect = new Rect(-size.x, -size.y+offsetY, size.x, size.y-offsetY);
 
         gameObject.SetActive(false);
+        life = GameConst.GoodsLife;
     }
 
     public void Show()
@@ -47,10 +47,14 @@ public class Goods : MonoBehaviour
         SoundManager.Instance.PlaySe("Goods");
     }
 
-
     public void Pass()
     {
-        if(gameObject.activeSelf == false)
+        if (IsShow == false)
+        {
+            return;
+        }
+
+        if (gameObject.activeSelf == false)
         {
             return;
         }
