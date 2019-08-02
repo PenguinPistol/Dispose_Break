@@ -25,7 +25,7 @@ public class Coupon : MonoBehaviour
 
     public void CheckCode()
     {
-        string code = inputCode.text.ToUpper();
+        string code = inputCode.text;
         string query = string.Format("SELECT * FROM Coupon WHERE Code=\'{0}\';", code);
 
         bool isValid = false;
@@ -40,8 +40,6 @@ public class Coupon : MonoBehaviour
             type = reader.GetString(2);
             value = reader.GetString(3);
         });
-
-        Debug.Log(isValid + " / " + isUsed);
 
         if(isValid == false || isUsed)
         {
@@ -63,9 +61,7 @@ public class Coupon : MonoBehaviour
 
             query = string.Format("UPDATE Coupon SET Used=\'True\' WHERE Code=\'{0}\';", code);
 
-            Database.Query(query, (reader) =>
-            {
-            });
+            Database.Query(query, (reader) => {});
 
             gameObject.SetActive(false);
             reward.SetActive(true);

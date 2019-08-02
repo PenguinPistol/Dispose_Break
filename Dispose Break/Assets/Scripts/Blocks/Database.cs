@@ -25,6 +25,7 @@ public static class Database
 #elif UNITY_ANDROID
             string connect = string.Format("URI=file:{0}/DisposeBreakDB.db", Application.persistentDataPath);
 #endif
+            
             IDbConnection dbConnect = new SqliteConnection(connect);
             dbConnect.Open();
 
@@ -85,6 +86,7 @@ public static class Database
             query.Append("\'InfoHalf\' TEXT, ");
             query.Append("\'InfoReverse\' TEXT);");
 
+            Debug.Log("CREATE TABLE query : " + query);
             Query(query.ToString(), (reader) => { });
         }
         else
@@ -136,6 +138,8 @@ public static class Database
 
         query.Clear();
         query.AppendFormat(SELECT_TABLE_ALL, "SaveData");
+
+        Debug.Log("CREATE TABLE query : " + query);
 
         Query(query.ToString(), (reader) =>
         {
@@ -193,9 +197,9 @@ public static class Database
     {
         List<BallSkin> result = new List<BallSkin>();
 
-        string query = string.Format(Database.SELECT_TABLE_ALL, "BallSkin");
+        string query = string.Format(SELECT_TABLE_ALL, "BallSkin");
 
-        Database.Query(query, (reader) => {
+        Query(query, (reader) => {
             BallSkin skin = new BallSkin
             {
                 index = int.Parse(reader.GetString(0)),

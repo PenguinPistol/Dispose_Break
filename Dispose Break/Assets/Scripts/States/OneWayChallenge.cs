@@ -8,50 +8,16 @@ public class OneWayChallenge : GameState
 {
     private const string CHALLENGE_NAME = "OneWayChallenge";
 
-    public Text goodsText;
-    public AudioSource sePlayer;
     public Animator tutorial;
 
-    private BlockGroup blockGroup;
-    private List<int> hps;
-    private List<BallSkin> unlockSkins;
+    private BallSkin unlockSkin;
     private int level;
 
     public override IEnumerator Initialize(params object[] _data)
     {
-        SoundManager.Instance.sePlayer = sePlayer;
-        SoundManager.Instance.PlaySe("Scroll");
+        yield return base.Initialize(_data);
 
-        GameManager.Instance.currentGameMode = this;
         GetLevelData();
-        // 획득할수 있는 볼 스킨 종류 체크
-        unlockSkins = GameManager.Instance.ballSkins.FindAll(x => x.unlockType == 1);
-
-        yield return null;
-    }
-
-    public override void Begin()
-    {
-        inventory.Initialize(inventoryBlocks, hps);
-        shotButton.interactable = false;
-        path.Calculate(ball.shotDegree);
-
-        TouchController.Instance.AddObservable(this);
-    }
-
-    public override void Execute()
-    {
-        if(Input.GetKeyDown(KeyCode.Escape))
-        {
-            ShowOptionPopup();
-        }
-
-        goodsText.text = string.Format("{0}", SaveData.goods);
-    }
-
-    public override void Release()
-    {
-        TouchController.Instance.RemoveObservable(this);
     }
 
     public override void TouchBegan(Vector3 touchPosition, int touchIndex)
@@ -62,77 +28,46 @@ public class OneWayChallenge : GameState
         }
     }
 
-    public override void TouchMoved(Vector3 touchPosition, int touchIndex)
+    public override void Successe()
     {
-        if(selectBlock != null)
+        SaveData.oneWayClear += 1;
+
+        if (SaveData.oneWayClear == GameManager.Instance.OneWayCount)
         {
-            float z = selectBlock.transform.position.z;
-
-            selectBlock.transform.position = new Vector3(touchPosition.x, touchPosition.y, z);
-        }
-    }
-
-    public override void TouchEnded(Vector3 touchPosition, int touchIndex)
-    {
-        if(selectBlock != null)
-        {
-            selectBlock.CheckPosition();
-            selectBlock = null;
-
-            if(inventory.Count == 0)
-            {
-                shotButton.interactable = true;
-            }
-        }
-    }
-
-    public override void DisposeBlock(Block block)
-    {
-        selectBlock = Instantiate(block, transform);
-        selectBlock.StartMoved();
-        selectBlock.breakedAction = () => {
-            // 블록 부서짐
-        };
-
-        disposedBlocks.Add(selectBlock);
-    }
-
-    protected override IEnumerator Shot()
-    {
-        ball.Shot();
-
-        while(ball.Finished == false)
-        {
-            if (ball.bounceCount >= GameConst.DropCount)
-            {
-                dropButton.gameObject.SetActive(true);
-            }
-
-            yield return null;
-        }
-
-        if (disposedBlocks.FindAll(x => x.isBreaked).Count == disposedBlocks.Count && ball.isDroped == false)
-        {
-            // clear
-            // 클리어보상 있는지 체크
-            SaveData.oneWayClear += 1;
-
-            if (SaveData.oneWayClear == GameManager.Instance.OneWayCount)
-            {
-                PopupContoller.Instance.Show("ChallengeCompletePopup", CHALLENGE_NAME);
-            }
-            else
-            {
-                var unlockSkin = unlockSkins.Find(x => x.unlockLevel == level);
-
-                PopupContoller.Instance.Show("ChallengeClearPopup", CHALLENGE_NAME, unlockSkin);
-            }
+            PopupContoller.Instance.Show("ChallengeCompletePopup", CHALLENGE_NAME);
         }
         else
         {
-            // failed
-            PopupContoller.Instance.Show("ChallengeFailedPopup", CHALLENGE_NAME);
+            PopupContoller.Instance.Show("ChallengeClearPopup", CHALLENGE_NAME, unlockSkin);
         }
+    }
+
+    public override void Failed()
+    {
+        PopupContoller.Instance.Show("ChallengeFailedPopup", CHALLENGE_NAME, RewardCallback);
+    }
+
+    public override void Continue()
+    {
+        blockGroup = new BlockGroup()
+        {
+            index = 0,
+            unlock = 0
+        };
+
+        blockGroup.blockIndex = new List<int>();
+        blockGroup.blockHp = new List<int>();
+
+        for (int i = 0; i < disposedBlocks.Count; i++)
+        {
+            if(disposedBlocks[i].isBreaked == false)
+            {
+                blockGroup.blockIndex.Add(disposedBlocks[i].index);
+                blockGroup.blockHp.Add(disposedBlocks[i].hp);
+            }
+        }
+
+        StartCoroutine(ResetShot());
     }
 
     public void GetLevelData()
@@ -144,13 +79,13 @@ public class OneWayChallenge : GameState
         {
             level = int.Parse(reader.GetString(0));
 
+            ball.Initialize(float.Parse(reader.GetString(1)));
+
             blockGroup = new BlockGroup
             {
                 index = 0,
                 unlock = 0
             };
-
-            ball.shotDegree = float.Parse(reader.GetString(1));
 
             string[] index = reader.GetString(2).Split(',');
             string[] hp = reader.GetString(3).Split(',');
@@ -162,19 +97,7 @@ public class OneWayChallenge : GameState
             }
         });
 
-        inventoryBlocks = new List<Block>();
-        hps = new List<int>();
-
-        for (int i = 0; i < blockGroup.Count; i++)
-        {
-            Block block = usedBlocks.Find(x => x.index == blockGroup.blockIndex[i]);
-            inventoryBlocks.Add(block);
-            hps.Add(blockGroup.blockHp[i]);
-        }
-    }
-
-    public void ShowOptionPopup()
-    {
-        PopupContoller.Instance.Show("ChallengeOptionPopup");
+        // 이번스테이지에서 획득할 수 있는 공 스킨
+        unlockSkin = GameManager.Instance.ballSkins.Find(x => x.unlockType == 1 && x.unlockLevel == level);
     }
 }

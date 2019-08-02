@@ -1,0 +1,6 @@
+string,bool,string,int
+Code,Used,Type,Value
+@,,,
+코드,사용여부(false),보상타입,값
+welcomecoupon,FALSE,Goods,20
+@,,,

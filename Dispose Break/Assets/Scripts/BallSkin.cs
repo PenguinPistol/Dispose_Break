@@ -11,4 +11,5 @@ public class BallSkin
     public int unlockLevel;
 
     public Sprite sprite;
+    public bool isUnlock;
 }

@@ -1,315 +1,167 @@
 ﻿using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
-using com.TeamPlug.Input;
 
 public class InfinityMode : GameState
 {
-    public enum State
-    {
-        Ready, Play, Pause, Finished
-    }
-    
+    //SELECT * FROM InfinityModeGroup WHERE CAST(UnlockLevel AS INTEGER) <= 3 ORDER BY random() LIMIT 1;
+    private const string SELECT_WHERE_FORMAT = "CAST(UnlockLevel AS INTEGER) <= {0} ORDER BY RANDOM() LIMIT 1;";
+
     public Animator animator;
     public Text scoreText;
-    public Text goodsText;
     public Goods goods;
-    public AudioSource sePlayer;
     public Animator wallPoint;
 
+    private int rallyCount = 0;
     private int rallyScore = 0;
     private int currentScore = 0;
-    private State state = State.Ready;
-
-    private int rallyCount = 0;
-    private int groupIndex = 0;
-
-    private List<BlockGroup> blockGroup;
-    private List<int> hps;
+    private bool isPlay = false;
 
     public override IEnumerator Initialize(params object[] _data)
     {
-        SoundManager.Instance.sePlayer = sePlayer;
-        SoundManager.Instance.PlaySe("Scroll");
-        GameManager.Instance.currentGameMode = this;
+        yield return base.Initialize(_data);
 
+        // 블록 그룹 불러오기
         blockGroup = GetUnlockGroup();
 
-        SetInventoryBlock(blockGroup[groupIndex]);
-
-        ball.shotDegree = GameConst.BallAngleDefault;
-        ball.wallAction = () =>
+        // 공 방향 세팅
+        ball.Initialize(GameConst.BallAngleDefault);
+        ball.WallHitCallback = () =>
         {
+            // 생성으로 변경
             wallPoint.transform.position = ball.transform.position;
             wallPoint.Play("WallPoint");
+            // 랠리 포인트 누적
             rallyScore++;
         };
-
-        isShot = false;
-
-        selectBlock = null;
-
-        yield return null;
-    }
-
-    public override void Begin()
-    {
-        inventory.Initialize(inventoryBlocks, hps);
-        shotButton.interactable = false;
-        path.Calculate(ball.shotDegree);
-
-        TouchController.Instance.AddObservable(this);
     }
 
     public override void Execute()
     {
-        switch (state)
-        {
-            case State.Ready:
-                if(Input.GetKeyDown(KeyCode.Escape))
-                {
-                    PopupContoller.Instance.Show("QuitPopup");
-                }
-                break;
+        base.Execute();
 
-            case State.Play:
-                scoreText.text = string.Format("{0}", currentScore);
-                goodsText.text = string.Format("{0}", SaveData.goods);
-                break;
-        }
+        scoreText.text = string.Format("{0}", currentScore);
     }
 
-    public override void Release()
+    public override void DisposeBlock(int index, int hp, Vector3 position)
     {
-        TouchController.Instance.RemoveObservable(this);
-    }
+        base.DisposeBlock(index, hp, position);
 
-    public override void TouchBegan(Vector3 touchPosition, int touchIndex)
-    {
-        var hitCollider = TouchController.Raycast2D(touchPosition);
-
-        if(hitCollider != null)
+        if(isPlay == false)
         {
-            if(hitCollider.tag.Equals("Block"))
-            {
-                // 이동 
-                selectBlock = hitCollider.GetComponent<Block>();
-                selectBlock.StartMoved();
-            }
-        }
-    }
-
-    public override void TouchMoved(Vector3 touchPosition, int touchIndex)
-    {
-        if(selectBlock != null)
-        {
-            float z = selectBlock.transform.position.z;
-
-            selectBlock.transform.position = new Vector3(touchPosition.x, touchPosition.y, z);
-        }
-    }
-
-    public override void TouchEnded(Vector3 touchPosition, int touchIndex)
-    {
-        if(selectBlock != null)
-        {
-            bool result = selectBlock.CheckPosition();
-
-            if(result == false)
-            {
-                inventory.Add(selectBlock, selectBlock.hp);
-                disposedBlocks.Remove(selectBlock);
-                Destroy(selectBlock.gameObject);
-            }
-        }
-
-        selectBlock = null;
-
-        if (inventory.Count == 0)
-        {
-            shotButton.interactable = true;
-        }
-    }
-
-    public override void DisposeBlock(Block block)
-    {
-        if(state == State.Ready)
-        {
-            state = State.Play;
+            isPlay = true;
             animator.Play("Play");
         }
-
-        selectBlock = Instantiate(block, transform);
-        selectBlock.StartMoved();
+       
         selectBlock.breakedAction = () => {
             rallyScore++;
         };
-
-        disposedBlocks.Add(selectBlock);
     }
 
-    protected override IEnumerator Shot()
+    public override void Successe()
     {
-        ball.Shot();
+        // 획득점수 합산
+        currentScore += rallyScore;
+        rallyScore = 0;
+        rallyCount++;
 
-        while (ball.Finished == false)
+        // 다음 블럭 로드
+        blockGroup = GetUnlockGroup();
+
+        // 공 원위치
+        ball.SetDirection();
+        StartCoroutine(ResetShot());
+
+        // 튜토리얼 체크
+        CheckTutorial();
+
+        // 재화 생성체크
+        goods.Pass();
+
+        if(rallyCount == GameConst.GoodsSpawnCondition + goods.LivingCount)
         {
-            if(ball.bounceCount >= GameConst.DropCount)
-            {
-                dropButton.gameObject.SetActive(true);
-            }
-
-            yield return null;
-        }
-
-        if(ball.isDroped == false)
-        {
-            if (disposedBlocks.FindAll(x => x.isBreaked).Count == disposedBlocks.Count)
-            {
-                // 성공
-                yield return ball.ResetShot();
-
-                currentScore += rallyScore;
-                rallyScore = 0;
-                rallyCount++;
-
-                goods.Pass();
-
-                if (rallyCount % GameConst.GoodsSpawnCondition == 0)
-                {
-                    goods.Show();
-                }
-
-                path.Calculate(ball.shotDegree);
-                path.gameObject.SetActive(true);
-
-                foreach (var item in disposedBlocks)
-                {
-                    Destroy(item.gameObject);
-                }
-                disposedBlocks.Clear();
-
-                var unlockGroup = GetUnlockGroup();
-                groupIndex = Random.Range(1, unlockGroup.Count);
-
-                SoundManager.Instance.PlaySe("Inventory");
-                SetInventoryBlock(unlockGroup[groupIndex]);
-
-                var check = unlockGroup[groupIndex];
-
-                if (SaveData.infoShield == false)
-                {
-                    if (check.blockIndex.Contains(7) || check.blockIndex.Contains(8))
-                    {
-                        SaveData.infoShield = true;
-                        PopupContoller.Instance.Show("InfoPopup", 1);
-                    }
-                }
-
-                if (SaveData.infoHalf == false)
-                {
-                    if (check.blockIndex.Contains(6))
-                    {
-                        SaveData.infoHalf = true;
-                        PopupContoller.Instance.Show("InfoPopup", 2);
-                    }
-                }
-
-                if (SaveData.infoReverse == false)
-                {
-                    if (check.blockIndex.Contains(9))
-                    {
-                        SaveData.infoReverse = true;
-                        PopupContoller.Instance.Show("InfoPopup", 3);
-                    }
-                }
-
-                inventory.Initialize(inventoryBlocks, hps);
-
-                dropButton.gameObject.SetActive(false);
-            }
-            else
-            {
-                // 실패
-                if (SaveData.bestScore < currentScore)
-                {
-                    SaveData.bestScore = currentScore;
-                }
-
-                SoundManager.Instance.PlaySe("Clear");
-                PopupContoller.Instance.Show("InfinityResultPopup", currentScore);
-            }
-        }
-        else
-        {
-            path.Calculate(ball.shotDegree);
-            path.gameObject.SetActive(true);
-
-            foreach (var item in disposedBlocks)
-            {
-                Destroy(item.gameObject);
-            }
-            disposedBlocks.Clear();
-
-            var unlockGroup = GetUnlockGroup();
-
-            SoundManager.Instance.PlaySe("Inventory");
-            SetInventoryBlock(unlockGroup[groupIndex]);
-            inventory.Initialize(inventoryBlocks, hps);
-            ball.isDroped = false;
-        }
-
-        shotButton.interactable = false;
-        isShot = false;
-    }
-
-    public void ShowOptionPopup()
-    {
-        PopupContoller.Instance.Show("OptionPopup");
-    }
-
-    public void SetInventoryBlock(BlockGroup group)
-    {
-        inventoryBlocks = new List<Block>();
-        hps = new List<int>();
-
-        // block index로 찾을 수 있게 변경해야됨
-        for (int i = 0; i < group.Count; i++)
-        {
-            Block block = usedBlocks.Find(x => x.index == group.blockIndex[i]);
-            inventoryBlocks.Add(block);
-            hps.Add(group.blockHp[i]);
+            goods.Show();
         }
     }
 
-    private List<BlockGroup> GetUnlockGroup()
+    public override void Failed()
     {
-        List<BlockGroup> result = new List<BlockGroup>();
+        // 최고점수 체크
+        if (SaveData.bestScore < currentScore)
+        {
+            SaveData.bestScore = currentScore;
+        }
 
-        string where = string.Format("cast(UnlockLevel as integer) <= {0};", rallyCount);
+        // 결과 팝업 출력
+        PopupContoller.Instance.Show("InfinityResultPopup", currentScore, RewardCallback);
+    }
+
+    public override void Continue()
+    {
+        StartCoroutine(ResetShot());
+    }
+
+    public override void DropBall()
+    {
+        base.DropBall();
+        rallyScore = 0;
+    }
+
+    private BlockGroup GetUnlockGroup()
+    {
+        // query
+        string where = string.Format(SELECT_WHERE_FORMAT, rallyCount);
         string query = string.Format(Database.SELECT_TABLE_ALL_WHERE, "InfinityModeGroup", where);
+
+        //Debug.Log(query);
+
+        var result = new BlockGroup();
 
         Database.Query(query, (reader) =>
         {
-            BlockGroup group = new BlockGroup
-            {
-                index = int.Parse(reader.GetString(0)),
-                unlock = int.Parse(reader.GetString(1))
-            };
+            result.index = int.Parse(reader.GetString(0));
+            result.unlock = int.Parse(reader.GetString(1));
 
-            string[] blockIndex = reader.GetString(2).Split(',');
-            string[] blockHp = reader.GetString(3).Split(',');
+            string[] indexSplit = reader.GetString(2).Split(',');
+            string[] hpSplit = reader.GetString(3).Split(',');
 
-            for (int i = 0; i < blockIndex.Length; i++)
+            for (int i = 0; i < indexSplit.Length; i++)
             {
-                group.blockIndex.Add(int.Parse(blockIndex[i]));
-                group.blockHp.Add(int.Parse(blockHp[i]));
+                result.blockIndex.Add(int.Parse(indexSplit[i]));
+                result.blockHp.Add(int.Parse(hpSplit[i]));
             }
-
-            result.Add(group);
         });
 
         return result;
+    }
+
+    private void CheckTutorial()
+    {
+        if (SaveData.infoShield == false)
+        {
+            if (blockGroup.ContainsBlock(7) || blockGroup.ContainsBlock(8))
+            {
+                SaveData.infoShield = true;
+                PopupContoller.Instance.Show("InfoPopup", 1);
+            }
+        }
+
+        if (SaveData.infoHalf == false)
+        {
+            if (blockGroup.ContainsBlock(6))
+            {
+                SaveData.infoHalf = true;
+                PopupContoller.Instance.Show("InfoPopup", 2);
+            }
+        }
+
+        if (SaveData.infoReverse == false)
+        {
+            if (blockGroup.ContainsBlock(9))
+            {
+                SaveData.infoReverse = true;
+                PopupContoller.Instance.Show("InfoPopup", 3);
+            }
+        }
     }
 }

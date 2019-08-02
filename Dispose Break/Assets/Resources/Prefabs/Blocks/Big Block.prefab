@@ -176,7 +176,7 @@ MonoBehaviour:
   breakEffect: {fileID: 4321372395162273547, guid: 4a01497a970c03043805441b9618ace0,
     type: 3}
   index: 3
-  blockName: Long Block
+  blockName: Big Block
   hp: 1
   isMoved: 0
   isDisposed: 0

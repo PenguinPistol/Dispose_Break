@@ -15,3 +15,4 @@ LootAdCooltime,float,60,광고 뽑기 쿨타임
 LootProbabilityNormal,float,70,노말 등급 공 스킨 등장 확률
 LootProbabilityRare,float,25,레어 등급 공 스킨 등장 확률
 LootProbabilityUnique,float,5,유니크 등급 공 스킨 등장 확률
+InterstitialAdsCooltime,float,120,전면광고 쿨타임

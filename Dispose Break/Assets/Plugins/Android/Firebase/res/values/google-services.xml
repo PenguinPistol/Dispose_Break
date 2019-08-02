@@ -1,0 +1,11 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources tools:keep="@string/firebase_database_url,@string/gcm_defaultSenderId,@string/google_storage_bucket,@string/project_id,@string/google_api_key,@string/google_crash_reporting_api_key,@string/google_app_id,@string/default_web_client_id" xmlns:tools="http://schemas.android.com/tools">
+  <string name="firebase_database_url" translatable="false">https://disposebreak.firebaseio.com</string>
+  <string name="gcm_defaultSenderId" translatable="false">140206518171</string>
+  <string name="google_storage_bucket" translatable="false">disposebreak.appspot.com</string>
+  <string name="project_id" translatable="false">disposebreak</string>
+  <string name="google_api_key" translatable="false">AIzaSyBzjQ0Oo5kPg-yVm19N_noPFLcprZ08O50</string>
+  <string name="google_crash_reporting_api_key" translatable="false">AIzaSyBzjQ0Oo5kPg-yVm19N_noPFLcprZ08O50</string>
+  <string name="google_app_id" translatable="false">1:140206518171:android:97821c48ac64b9e4</string>
+  <string name="default_web_client_id" translatable="false">140206518171-8313d7niod66v2tr4nfqmshiebkpd3pn.apps.googleusercontent.com</string>
+</resources>

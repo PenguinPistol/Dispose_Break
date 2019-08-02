@@ -13,11 +13,14 @@ public class CSVToSqlite
     public IEnumerator Parse(string fileName)
     {
         string path = string.Format("Data/{0}", fileName);
+
+        //Debug.LogFormat(" ㄴCSVToSqlite {0} >> ReadDataCSV", fileName);
         var data = CSVReader.ReadDataCSV(string.Format("{0}", path));
 
         var headers = data[CSVReader.KEY_HEADER];
         var types = data[CSVReader.KEY_TYPE];
 
+        //Debug.LogFormat(" ㄴCSVToSqlite {0} >> CreateTable", fileName);
         yield return CreateTable(fileName, headers, types);
 
         for (int i = 0; i < data[headers[0]].Length; i++)
@@ -29,10 +32,9 @@ public class CSVToSqlite
                 values[j] = data[headers[j]][i];
             }
 
+            //Debug.LogFormat(" ㄴCSVToSqlite {0} >> InsertData[{1}]", fileName, i);
             yield return InsertData(fileName, values);
         }
-
-        //EditorUtility.ClearProgressBar();
     }
 
     private IEnumerator CreateTable(string tableName, string[] header, string[] types)
@@ -41,6 +43,7 @@ public class CSVToSqlite
 
         int result = -1;
 
+        //Debug.LogFormat(" ㄴCreateTable {0} >> CheckTable", tableName);
         Database.Query(query, (reader) => {
             result = reader.GetInt32(0);
         });
@@ -65,12 +68,14 @@ public class CSVToSqlite
 
             query = sb.ToString();
 
+            //Debug.LogFormat(" ㄴCreateTable {0} >> CREATE TABLE", tableName);
             Database.Query(query, (reader) => { });
         }
         else
         {
             query = string.Format("DELETE FROM {0}", tableName);
 
+            //Debug.LogFormat(" ㄴCreateTable {0} >> DELETE", tableName);
             Database.Query(query, (reader) => { });
         }
 
@@ -96,7 +101,7 @@ public class CSVToSqlite
 
         string query = sb.ToString();
 
-        //Debug.Log("Insert : " + query);
+        //Debug.LogFormat(" ㄴInsertData {0} >> INSERT", tableName);
         Database.Query(query, (reader) => { });
 
         yield return null;

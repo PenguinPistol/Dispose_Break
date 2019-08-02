@@ -78,7 +78,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: 0
+  m_Text: 
 --- !u!1 &7605019055158994162
 GameObject:
   m_ObjectHideFlags: 0
@@ -290,9 +290,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c5d1348647ab3c842857785936c04d41, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  block: {fileID: 0}
-  count: 0
   image: {fileID: 5462099748797387301}
   countText: {fileID: 603917077275989302}
   hpText: {fileID: 4383280582553513377}
-  button: {fileID: 2248251262924437592}
+  blockIndex: 0
+  blockHp: 0
+  count: 0
